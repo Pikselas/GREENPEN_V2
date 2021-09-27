@@ -1,0 +1,22 @@
+body
+{
+    background-color: #090e11;
+}
+.LogoArea
+{
+    transition: all .5s;
+    width: min-content;
+    height: min-content;
+    position: absolute; 
+    text-align: center;
+    font-size: 3500%;
+    color: aquamarine;
+    font-family:fantasy;
+    cursor: pointer;
+    left: 35%;
+}
+.LogoArea:hover
+{
+   box-shadow: 0px 0px 10px white;
+   left: 40%;
+}
