@@ -5,18 +5,68 @@ body
 .LogoArea
 {
     transition: all .5s;
-    width: min-content;
-    height: min-content;
-    position: absolute; 
-    text-align: center;
-    font-size: 3500%;
-    color: aquamarine;
-    font-family:fantasy;
-    cursor: pointer;
-    left: 35%;
+    width: 60%;
+    height: 60%;
+    position: absolute;
+    box-shadow: 0px 0px 10px white;
+    left: 20%;
+    top: 20%;
 }
-.LogoArea:hover
+.LogoArea div
 {
-   box-shadow: 0px 0px 10px white;
-   left: 40%;
+    width: 50%;
+    height: 50%;
+}
+.Lg1,.Lg2,.Lg3,.Lg4
+{
+    position: absolute;
+    transition: all .5s;
+}
+.Lg1
+{
+    top: 0%;
+    left: 0%;
+}
+.Lg2
+{
+    top: 0%;
+    left: 50%;
+}
+.Lg3
+{
+    top: 50%;
+    left: 0%;
+}
+.Lg4
+{
+    top: 50%;
+    left: 50%;
+}
+.LogoArea:hover 
+{
+    box-shadow: none;
+} 
+.LogoArea:hover .Lg1
+{
+    box-shadow: 0px 0px 10px white;
+    left: -25%; 
+    top: -25%;
+}
+.LogoArea:hover .Lg2
+{
+    box-shadow: 0px 0px 10px white;
+    left: 75%;
+    top: -25%; 
+}
+.LogoArea:hover .Lg3
+{
+    box-shadow: 0px 0px 10px white;
+    left: -25%;
+    top: 75%;
+}
+.LogoArea:hover .Lg4
+{
+    box-shadow: 0px 0px 10px white;
+    left: 75%;
+    top: 75%;
 }
