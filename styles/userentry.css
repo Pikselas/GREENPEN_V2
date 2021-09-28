@@ -1,0 +1,16 @@
+body
+{
+    background-color: #090e11;
+}
+.AuthAreaMain
+{
+    position: absolute;
+    width: 45%;
+    height: 65%;
+    background-color: #963cbdff;
+    top: 15%;
+    left: 25%;
+    border-radius: 20px;
+    box-shadow: 0px 0px 210px #84ff61 inset,0px 0px 110px #00eecd inset, 0px 0px 150px #17c1d3 inset,0px 0px 125px #190202 inset,0px 0px 10px #ffffffbd;
+    border: 2.5px solid #0a227f;
+}
