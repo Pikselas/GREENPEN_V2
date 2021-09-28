@@ -7,10 +7,70 @@ body
     position: absolute;
     width: 45%;
     height: 65%;
-    background-color: #963cbdff;
+    background-color: #12c4ed;
     top: 15%;
     left: 25%;
     border-radius: 20px;
-    box-shadow: 0px 0px 210px #84ff61 inset,0px 0px 110px #00eecd inset, 0px 0px 150px #17c1d3 inset,0px 0px 125px #190202 inset,0px 0px 10px #ffffffbd;
+    box-shadow: 0px 0px 210px #84ff61 inset,0px 0px 110px #00eecd inset, 0px 0px 150px #17c1d3 inset,0px 0px 525px #963cbdff inset,0px 0px 10px #ffffffbd;
     border: 2.5px solid #0a227f;
+}
+.AuthAreaMain input[type="text"] ,.AuthAreaMain input[type="password"]
+{
+    transition: all .5s;
+    display: block;
+    padding: 4%;
+    width: 35%;
+    position: relative;
+    top: 20%;
+    left: 30%;
+    border-radius: 15px;
+    background-color: #00eecd;
+    border: 3.5px solid #09ff8c87;
+    text-align: center;
+    font-size: medium;
+    color: white;
+}
+.AuthAreaMain input[type="button"]
+{
+    position: relative;
+    top: 20%;
+    left: 32%;
+    width: 20%;
+    height: 10%;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all .5s;
+}
+.LogInBtn
+{
+    border: 2px solid rgb(86, 255, 86);
+    background-color: #00ffbf00;
+    color: rgba(255, 255, 255, 0.705);
+    font-weight: 600;
+}
+.SignUpBtn
+{
+    border: 2px solid #6311cf;
+    background-color: #6311cf;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+}
+.LogInBtn:hover
+{
+    background-color: #00ffbf;
+    color: white;
+    font-weight: 800; 
+}
+.SignUpBtn:hover
+{
+    background-color: #6311cf00;
+    color: rgba(255, 255, 255, 0.603);
+    font-weight: 800; 
+}
+.AuthAreaMain input[type="text"]:focus ,.AuthAreaMain input[type="password"]:focus
+{
+    width: 60%;
+    left: 15%;
+    background-color: #00eece31;
+    font-weight: 800;
 }
