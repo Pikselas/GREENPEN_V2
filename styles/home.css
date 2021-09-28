@@ -59,7 +59,7 @@ body
     font-family: monospace;
     color: rgb(0, 255, 115);
     text-align: center;
-    transition: all .5s,text-align .5s;
+    transition: all 3.5s;
     background-color: rgba(9, 2, 44, 0.356);
 }
 .Lg1
