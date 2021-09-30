@@ -42,8 +42,8 @@ function GetUserDetails()
         return "Username should not be empty";
     }
 }
-document.onload = ()=>{
-    if(GetCookie().hasOwnProperty("active_user_id"))
+document.body.onload = ()=>{
+    if(GetCookie().hasOwnProperty("active_user_name"))
     {
         window.location = "userarea.html";
     }
@@ -56,7 +56,11 @@ document.getElementById("LogInBtn").onclick = ()=>{
     }
     else
     {
-        console.log(CreateFormData(UserDtls));
+        UserDtls["type"] = "login";
+        const Dat = CreateFormData(UserDtls);
+        PerformAjaxRequest("POST",{},"../server/userentry.php",Dat,true,(response)=>{
+            console.log(response);
+        });
     }
 };
 document.getElementById("SignUpBtn").onclick = ()=>{
@@ -67,6 +71,10 @@ document.getElementById("SignUpBtn").onclick = ()=>{
     }
     else
     {
-        
+        UserDtls["type"] = "signup";
+        const Dat = CreateFormData(UserDtls);
+        PerformAjaxRequest("POST",{},"../server/userentry.php",Dat,true,(response)=>{
+            console.log(response);
+        });
     }
 };
