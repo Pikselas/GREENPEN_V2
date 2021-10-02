@@ -1,0 +1,33 @@
+body
+{
+    background-color: #090e11;
+}
+.ProjectArea
+{
+    position: absolute;
+    width: 75%;
+    height: 97%;
+    overflow-y: scroll;
+    border: 2px solid #82ff82;
+    border-radius: 10px;
+    background-color: #1a143be6;
+}
+.UserFunction
+{
+    position: absolute;
+    width: 23%;
+    height: 97%;
+    border: 2px solid #39ffec;
+    right: 0.5%;
+    border-radius: 10px;
+    background-color: #070927;
+    text-align: center;
+}
+#userProfilePic
+{
+    width: 100px;
+    height: 100px;
+    border-radius: 55px;
+    padding: 5px;
+    border: 2px solid blue;
+}
