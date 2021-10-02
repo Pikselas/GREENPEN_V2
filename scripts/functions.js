@@ -5,7 +5,10 @@ function GetCookie()
     let biscuit_s = {};
     biscuit.forEach((value)=>{
         value = value.split("=");
-        biscuit_s[value[0].trim()] = value[1].trim();
+        if(value.length > 1)
+        {
+            biscuit_s[value[0].trim()] = value[1].trim();
+        }
     });
     return biscuit_s;
 }

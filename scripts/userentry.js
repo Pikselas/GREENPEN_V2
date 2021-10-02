@@ -59,7 +59,15 @@ document.getElementById("LogInBtn").onclick = ()=>{
         UserDtls["type"] = "login";
         const Dat = CreateFormData(UserDtls);
         PerformAjaxRequest("POST",{},"../server/userentry.php",Dat,true,(response)=>{
-            console.log(response);
+            response = JSON.parse(response);
+            if(response["success"])
+            {
+                window.location = "userarea.html";
+            }
+            else
+            {
+                alert(response["error"]);
+            }
         });
     }
 };
@@ -74,7 +82,15 @@ document.getElementById("SignUpBtn").onclick = ()=>{
         UserDtls["type"] = "signup";
         const Dat = CreateFormData(UserDtls);
         PerformAjaxRequest("POST",{},"../server/userentry.php",Dat,true,(response)=>{
-            console.log(response);
+            response = JSON.parse(response);
+            if(response["success"])
+            {
+                window.location = "userarea.html";
+            }
+            else
+            {
+                alert(response["error"]);
+            }
         });
     }
 };

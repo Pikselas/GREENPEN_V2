@@ -9,7 +9,7 @@
       $userDtls = mysqli_query($db_conn,$chkSql);
       if($_POST["type"] == "signup")
       {
-        $sql = sprintf("INSERT INTO GREEN_USERS(USERNAME,PASSWORD) VALUES('%s','%s')",$_POST["name"],password_hash($_POST["pass"],PASSWORD_DEFAULT));
+        $sql = sprintf("INSERT INTO GREEN_USERS(USERNAME,PASSWORD,PROFILEPIC) VALUES('%s','%s','%s')",$_POST["name"],password_hash($_POST["pass"],PASSWORD_DEFAULT),GP_USER_DEFAULT_PROFILE_PIC);
         if($userDtls)
         {
           if($userDtls->num_rows == 0)
@@ -20,8 +20,10 @@
               if($ID)
               {
                  $ID = $ID->fetch_assoc()["ID"];
+                 mkdir(GP_USER_RESOURCE_PATH . '/' . $ID);
                  setcookie("active_user_id",$ID,0,"/","",true,true);
                  setcookie("active_user_name",$_POST["name"],0,"/","",true);
+                 setcookie("active_user_profile_pic",GP_USER_DEFAULT_PROFILE_PIC,0,"/","",true);
                  $ResultStat["success"] = true;
               }
               else
@@ -56,6 +58,7 @@
             $ResultStat["success"] = true;
             setcookie("active_user_id",$userDtls["USERID"],0,"/","",true,true);
             setcookie("active_user_name",$_POST["name"],0,"/","",true);
+            setcookie("active_user_profile_pic",$userDtls["PROFILEPIC"],0,"/","",true);
             $ResultStat["success"] = true;
           }
           else
@@ -86,10 +89,6 @@
   else
   {
     $ResultStat["error"] = "Name/Password/Authentication type not specified";
-  }
-  if($ResultStat["success"])
-  {
-    header("Location:userarea.html");
   }
   echo json_encode($ResultStat);
 ?>
