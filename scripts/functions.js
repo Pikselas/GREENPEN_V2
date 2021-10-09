@@ -12,6 +12,12 @@ function GetCookie()
     });
     return biscuit_s;
 }
+function LogOut()
+{
+    PerformAjaxRequest("GET",{},"../server/logout.php","",true,()=>{
+        window.location = "home.html";
+    });
+}
 function CreateFormData(obj)
 {
     const Frm = new FormData();
@@ -52,4 +58,25 @@ Object.keys(headers).forEach((key)=>{
     AjxReq.setRequestHeader(key,headers[key]);
     })
 AjxReq.send(RequestBody);
+}
+function GetPathData()
+{
+    let ResultJson = {};
+    let SuppliedVal = window.location.search.replace('?','').replaceAll("%20","");
+    SuppliedVal = SuppliedVal.split("&");
+    SuppliedVal.forEach((value)=>{
+        let Tmp = value.split('=');
+        if(Tmp.length < 2)
+        {
+            if(Tmp[0] != '')
+            {
+                ResultJson[Tmp[0]] = null;
+            }
+        } 
+        else
+        {
+            ResultJson[Tmp[0]] = Tmp[1];
+        }
+    })
+    return ResultJson;
 }

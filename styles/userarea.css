@@ -33,25 +33,25 @@ body
     height: 100px;
     border-radius: 55px;
     padding: 5px;
-    border: 2.5px solid #00ff88b9;
-    opacity: 0.8;
+    border: 2.5px solid #00ff88;
+    opacity: 1;
     transition: all .2s;
 }
 .ProfileArea h3
 {
-    color: #00ff88c0;
+    color: #00ff88;
     font-family: cursive;
     font-size: x-large;
     transition: all .2s;
 }
 .ProfileArea:hover img
 {
-    opacity: 1;
-    border-color:#00ff88;
+    opacity: 0.85;
+    border-color:#00ff88d2;
 }
 .ProfileArea:hover h3
 {
-    color: #00ff87;
+    color: #00ff88d3;
 }
 .UserFunction input[type="search"]
 {
@@ -69,4 +69,26 @@ body
 .UserFunction input[type="search"]:focus
 {
     width: 60%;
+}
+.UserFunction button
+{
+    width: 45%;
+    cursor: pointer;
+    padding: 7px;
+    background-color: #2ea043;
+    color: rgba(255, 255, 255, 0.781);
+    border: 2px solid rgb(20, 255, 0);
+    border-radius: 5px;
+    font-family: sans-serif;
+    font-weight: 600;
+    transition: all .2s;
+}
+.UserFunction button:hover
+{
+    background-color: #24b63fc0 ;
+    color: white;
+}
+.UserFunction button:active
+{
+    border-color: #6cffce;
 }
