@@ -12,6 +12,6 @@ document.body.onload = ()=>{
     }
 };
 document.getElementById("Profile").onclick = ()=>{
-    window.location = "userprofile.html";
+    window.location = `userprofile.html?greenuser=${UserCookie["active_user_name"]}`;
 }
 document.getElementById("LogOut").onclick = LogOut;

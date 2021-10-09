@@ -68,7 +68,10 @@ function GetPathData()
         let Tmp = value.split('=');
         if(Tmp.length < 2)
         {
-            ResultJson[Tmp[0].trim()] = null;
+            if(Tmp[0] != '')
+            {
+                ResultJson[Tmp[0]] = null;
+            }
         } 
         else
         {
