@@ -59,3 +59,21 @@ Object.keys(headers).forEach((key)=>{
     })
 AjxReq.send(RequestBody);
 }
+function GetPathData()
+{
+    let ResultJson = {};
+    let SuppliedVal = window.location.search.replace('?','').replaceAll("%20","");
+    SuppliedVal = SuppliedVal.split("&");
+    SuppliedVal.forEach((value)=>{
+        let Tmp = value.split('=');
+        if(Tmp.length < 2)
+        {
+            ResultJson[Tmp[0].trim()] = null;
+        } 
+        else
+        {
+            ResultJson[Tmp[0]] = Tmp[1];
+        }
+    })
+    return ResultJson;
+}
