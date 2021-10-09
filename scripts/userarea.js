@@ -9,6 +9,7 @@ document.body.onload = ()=>{
     {
         document.getElementById("userProfilePic").src = UserCookie["active_user_profile_pic"].replaceAll("%2F","/");
         document.getElementById("userTitle").innerHTML = UserCookie["active_user_name"];
+        console.log(UserCookie);
     }
 };
 document.getElementById("Profile").onclick = ()=>{

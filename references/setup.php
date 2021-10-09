@@ -17,6 +17,8 @@
           }
       }
       mysqli_close($DB);
+     mkdir(GP_USER_RESOURCE_PATH);
+     copy("media/".GP_USER_DEFAULT_PROFILE_PIC,GP_USER_RESOURCE_PATH . '/' . GP_USER_DEFAULT_PROFILE_PIC);
      echo "<h1><b>setup completed</b> for <b><i>GREENPEN</i></b></h1>";
   }
 ?>
