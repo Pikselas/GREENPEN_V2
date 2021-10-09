@@ -12,6 +12,12 @@ function GetCookie()
     });
     return biscuit_s;
 }
+function LogOut()
+{
+    PerformAjaxRequest("GET",{},"../server/logout.php","",true,()=>{
+        window.location = "home.html";
+    });
+}
 function CreateFormData(obj)
 {
     const Frm = new FormData();

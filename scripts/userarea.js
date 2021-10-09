@@ -3,11 +3,15 @@ document.body.onload = ()=>{
     console.log()
     if(!(UserCookie = GetCookie()).hasOwnProperty("active_user_name"))
     {
-       // window.location = "home.html";
+        window.location = "home.html";
     }
-    document.getElementById("userProfilePic").src = UserCookie["active_user_profile_pic"].replaceAll("%2F","/");
-    document.getElementById("userTitle").innerHTML = UserCookie["active_user_name"];
+    else
+    {
+        document.getElementById("userProfilePic").src = UserCookie["active_user_profile_pic"].replaceAll("%2F","/");
+        document.getElementById("userTitle").innerHTML = UserCookie["active_user_name"];
+    }
 };
 document.getElementById("Profile").onclick = ()=>{
     window.location = "userprofile.html";
 }
+document.getElementById("LogOut").onclick = LogOut;
