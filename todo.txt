@@ -1,0 +1,6 @@
+2.add last updated column in green_projects table
+1.method for getting user projects from server(ascending by date)
+2.add css for showing projects like cards
+3.project details page
+4.project editor page
+5.project taglist table (not decided yet)
