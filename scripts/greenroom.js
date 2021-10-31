@@ -1,3 +1,4 @@
+var ProjectCode;
 document.body.onload = ()=>{
     let PathData = GetPathData();
     if(PathData.hasOwnProperty("code"))
@@ -9,7 +10,11 @@ document.body.onload = ()=>{
             {
                 document.getElementById("ProjectLgT").children[0].src = response["POSTER"];
                 document.getElementById("ProjectLgT").children[1].innerHTML = response["NAME"];
+                ProjectCode = response["CODE"];
             }
         });
     }
+}
+document.getElementById("ProjectAction").children[0].onclick = ()=>{
+    window.open("greeneditor.html?code="+ProjectCode);
 }

@@ -1,0 +1,25 @@
+#ProjectTools 
+{
+    position: absolute;
+    bottom: 0%;
+    left: 0%;
+    width: 100%;
+    height: 5%;
+    background-color: rgb(8, 23, 75);
+}
+#ProjectArea
+{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 95%;
+    background-color: rgb(26, 26, 124);
+}
+.Test
+{
+    width: 10%;
+    height: 10%;
+    resize: both;
+    background-color: rgb(72, 230, 72);
+}

@@ -1,3 +1,5 @@
 1.project details page
 2.project editor page
 3.project taglist table (not decided yet)
+4.project add tag options
+5.project scene openning by tag
