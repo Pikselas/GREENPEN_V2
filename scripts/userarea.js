@@ -3,7 +3,7 @@ function CreateProjectPanel(Obj)
 {
     let MainPanel = document.createElement("div");
     MainPanel.className = "ProjectPanel";
-    MainPanel.setAttribute("onclick",`window.open("greenland.html?code=${Obj["CODE"]}")`);
+    MainPanel.setAttribute("onclick",`window.open("greenroom.html?code=${Obj["CODE"]}")`);
     let PanelBGImageChild = document.createElement("img");
     PanelBGImageChild.src = Obj["POSTER"];
     let PanelTitleChild = document.createElement("h1");
