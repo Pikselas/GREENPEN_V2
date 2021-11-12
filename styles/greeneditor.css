@@ -17,13 +17,16 @@
     background-color: rgb(26, 26, 124);
     overflow: scroll;
 }
-#jehw
+.ImagePanel
 {
     position: absolute;
-    width: 10%;
-    height: 10%;
-    background-color: rgb(72, 230, 72);
-    transition: top .5s , left .5s , opacity .5s;
+    width: 30%;
+    height: 40%;
+    border-radius: 15px;
+    box-shadow: 10px 10px 10px rgba(18, 18, 20, 0.651);
+    border: 2px solid grey;
+    background-color: rgb(2, 187, 110);
+    transition: opacity .5s;
     overflow: hidden;
     resize: both;
 }
