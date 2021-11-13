@@ -1,0 +1,16 @@
+{
+   "NAME"    : "" , 
+   "POSTER"  : "" ,
+   "VIDEOS"  : {"ID" : "" , "PATH" : ""},
+   "IMAGES"  : {"FRAME_ID1" : {"img1" : "path" , "img2" : "path"},
+                "FRAME_ID2" : {"img1" : "path" , "img2" : "path"}
+              },
+   "SYNC_IMV": {
+                "VID_ID" : { "60" :{"60.567" : "" , "60.456" : ""} , 
+                             "70" : {"70.67" : "" , "70.465" : ""}    
+            }
+        },
+   "SYNC_V" : {"IMAGE_ID1" : {"VID_ID2" : "time"},
+              "IMAGE_ID2" : {"VID_ID2" : "time"}
+            }
+}
