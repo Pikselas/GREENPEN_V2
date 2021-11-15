@@ -6,11 +6,15 @@
                 "FRAME_ID2" : {"img1" : "path" , "img2" : "path"}
               },
    "SYNC_IMV": {
-                "VID_ID" : { "60" :{"60.567" : "" , "60.456" : ""} , 
-                             "70" : {"70.67" : "" , "70.465" : ""}    
+                "VID_ID" : { "60" :{"60.567" : "img_id1" , "60.456" : "img_id3"} , 
+                             "70" : {"70.67" : "img_id2" , "70.465" : "img_id4"}    
             }
         },
-   "SYNC_V" : {"IMAGE_ID1" : {"VID_ID2" : "time"},
-              "IMAGE_ID2" : {"VID_ID2" : "time"}
-            }
+   "SYNC_V" : {"IMAGE_ID1" : {"VID_ID2" : "time-start"},
+              "IMAGE_ID2" : {"VID_ID2" : "time-start"}
+            },
+   "SCENES" : {"SCENE_NAME1" : [{"VIDEO_ID" : {"TO":"00","FROM":"00"}},
+                                {"VIDEO_ID" : {"TO":"00","FROM":"00"}}
+                               ] , 
+               "SCENE_NAME2" : []}
 }
