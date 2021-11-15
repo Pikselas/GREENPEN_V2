@@ -5,7 +5,6 @@ document.body.onload = ()=>{
     {
         PerformAjaxRequest("GET",{},"../server/greenroom.php?code="+PathData["code"],"",true,(response)=>{
             response = JSON.parse(response);
-            console.log(response);
             if(response["success"])
             {
                 document.getElementById("ProjectLgT").children[0].src = response["POSTER"];

@@ -1,7 +1,7 @@
 <?php
 include "../references/php/defines.php";
  $ResponseJson = ["success"=>false];
-if(isset($_GET["code"]) && isset($_COOKIE["active_user_id"]))
+if(isset($_GET["code"]))
 {
     if($db_conn = mysqli_connect(DATABASE_HOST,DATABASE_USER,DATABASE_PASSWORD,DATABASE_NAME,DATABASE_PORT))
     {
