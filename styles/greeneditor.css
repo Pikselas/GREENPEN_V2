@@ -1,4 +1,4 @@
-#ProjectTools 
+#ProjectTools
 {
     position: absolute;
     bottom: 0%;
@@ -14,7 +14,7 @@
     left: 0%;
     width: 100%;
     height: 95%;
-    background-color: rgb(57, 26, 124);
+    background-color: rgb(31, 18, 59);
     overflow: scroll;
     scrollbar-width: thin;
 }
@@ -26,7 +26,7 @@
     border-radius: 15px;
     box-shadow: 5px 10px 10px rgba(18, 18, 20, 0.651);
     border: 5px ridge #2029324f;
-    background-color: rgba(183, 80, 255, 0.63);
+    background-color: rgba(104, 43, 145, 0.726);
     transition: opacity .5s;
     overflow: hidden;
     resize: both;
@@ -40,7 +40,7 @@
     width: 100%;
     height: 90%;
     top: 25px;
-    background-color: rgba(129, 0, 165, 0.49);
+    background-color: rgba(104, 43, 145, 0.479);
     color: rgba(255, 255, 255, 0.719);
     font-weight: 600;
     font-size: x-large;
@@ -70,7 +70,7 @@
     top: 0%;
     cursor: pointer;
     border:none;
-    background-color: rgba(4, 255, 184, 0.05);
+    background-color: rgba(13, 14, 13, 0);
     color: white;
     font-family:fantasy;
     font-weight: bolder;
@@ -91,4 +91,43 @@
 .ImageFrameAddButton:hover
 {
     background-color: rgb(5, 197, 139);
+}
+.VideoPanel
+{
+    position:absolute;
+    width: 20%;
+    height: 30%;
+    overflow: hidden;
+    resize: both;
+    border-radius: 15px;
+    box-shadow: 5px 10px 10px rgba(18, 18, 20, 0.651);
+    border: 5px ridge rgba(69, 26, 110, 0.493);
+    background-color: rgba(69, 26, 110, 0.664);
+    transition: opacity .5s;
+}
+.VideoPanel button
+{
+    width: 45px;
+    height: 25px;
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    background-color: rgba(69, 26, 110, 0.048);
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-family:fantasy;
+    font-weight: bolder;
+    font-size: large;
+}
+.VideoPanel button:hover
+{
+    background-color: rgb(255, 65, 31);
+}
+.VideoPanel video
+{
+    width: 100%;
+    height: 94%;
+    position: absolute;
+    top: 25px;
 }

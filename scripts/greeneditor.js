@@ -20,7 +20,6 @@ document.getElementById("ProjectArea").ondrop = (ev)=>{
         TempChild.style.left = ActualX + "px";
         Parent.removeChild(TempChild);
         Parent.appendChild(TempChild);
-        TempChild.style.opacity = 1;
     }
 }
 function GetAddPanel()
@@ -67,7 +66,7 @@ function CreateImageSection()
 {
     let ParentItem = document.getElementById("ProjectArea");
     let MainPanel = document.createElement("div");
-    
+
     MainPanel.className = "ImagePanel";
     MainPanel.draggable = true;
     MainPanel.ondragstart = (ev)=>{
@@ -79,13 +78,16 @@ function CreateImageSection()
             ev.target.style.opacity = 0;
         }
     };
+    MainPanel.ondragend = (ev)=>{
+        ev.target.style.opacity = 1;
+    }
     MainPanel.id = (Math.random() + 1).toString(36).substring(7);
     MainPanel.style.left = Math.floor(Math.random() * (ParentItem.offsetWidth - (ParentItem.offsetWidth * 30 / 100))) + "px";
     MainPanel.style.top = Math.floor(Math.random() * (ParentItem.offsetHeight - (ParentItem.offsetHeight * 40 / 100))) + "px";
-    
+
     let PanelCloseButton = document.createElement("button");
     let PanelAddButton = document.createElement("button");
-    
+
     PanelCloseButton.innerHTML = "x";
     PanelCloseButton.className = "ImageFrameCloseButton";
     PanelCloseButton.onclick = (ev)=>{
@@ -106,13 +108,44 @@ function CreateImageSection()
     }
     MainPanel.appendChild(PanelAddButton);
     MainPanel.appendChild(PanelCloseButton);
-    
+
     let SubPanel = document.createElement("div");
     SubPanel.className = "SubImagePanel";
 
     MainPanel.appendChild(SubPanel);
     MainPanel.appendChild(GetAddPanel());
     ParentItem.appendChild(MainPanel);
+}
+function CreateVideoItem()
+{
+    let ParentItem = document.getElementById("ProjectArea");
+    let VidPanel = document.createElement("div");
+    VidPanel.className = "VideoPanel";
+    VidPanel.draggable = true;
+    VidPanel.ondragstart = (ev)=>{
+      if(ev.target.tagName == "DIV")
+      {
+          ev.dataTransfer.setData("ChildID",ev.target.id);
+          ev.dataTransfer.setData("x",ev.layerX);
+          ev.dataTransfer.setData("y",ev.layerY);
+          ev.target.style.opacity = 0;
+      }
+    }
+    VidPanel.ondragend = (ev)=>{
+        ev.target.style.opacity = 1;
+    }
+    VidPanel.id = (Math.random() + 1).toString(36).substring(7);
+    VidPanel.style.left = Math.floor(Math.random() * (ParentItem.offsetWidth - (ParentItem.offsetWidth * 30 / 100))) + "px";
+    VidPanel.style.top = Math.floor(Math.random() * (ParentItem.offsetHeight - (ParentItem.offsetHeight * 40 / 100))) + "px";
+    let VidPanelCloseButton = document.createElement("button");
+    VidPanelCloseButton.innerHTML = "x";
+    VidPanelCloseButton.onclick = (ev) =>{
+        ev.target.parentElement.parentElement.removeChild(ev.target.parentElement);
+    }
+    VidPanel.appendChild(VidPanelCloseButton);
+    let VideoObj = document.createElement("video");
+    VidPanel.appendChild(VideoObj);
+    document.getElementById("ProjectArea").appendChild(VidPanel);
 }
 function AddImage(ev)
 {
