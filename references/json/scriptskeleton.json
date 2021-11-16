@@ -1,0 +1,9 @@
+{
+    "NAME"    : "" , 
+    "POSTER"  : "" ,
+    "VIDEOS"  : [] ,
+    "IMAGES"  : {} ,
+    "SYNC_IMV": {} ,
+    "SYNC_V"  : {} ,
+    "SCENES"  : {}
+ }

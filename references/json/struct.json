@@ -1,7 +1,7 @@
 {
    "NAME"    : "" , 
    "POSTER"  : "" ,
-   "VIDEOS"  : {"ID" : "" , "PATH" : ""},
+   "VIDEOS"  : [{"ID" : "" , "PATH" : ""}],
    "IMAGES"  : {"FRAME_ID1" : {"img1" : "path" , "img2" : "path"},
                 "FRAME_ID2" : {"img1" : "path" , "img2" : "path"}
               },

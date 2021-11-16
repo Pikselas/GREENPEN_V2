@@ -45,7 +45,7 @@ document.getElementById("NewProject").onclick = ()=>{
             console.log(response);
                 if(response["success"])
                 {
-                   window.location = "greenland.html?code=" + response["projectcode"]; 
+                   window.location = "greenroom.html?code=" + response["projectcode"]; 
                 }
                 else
                 {

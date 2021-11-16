@@ -11,10 +11,7 @@
       foreach($SqlLists as $SQL_FILE)
       {
           $SQL_FILE = file_get_contents($SQL_FILE);
-          if($SQL_FILE != false)
-          {
-            mysqli_query($DB,$SQL_FILE);
-          }
+          mysqli_query($DB,$SQL_FILE);
       }
       mysqli_close($DB);
      mkdir(GP_USER_RESOURCE_PATH);

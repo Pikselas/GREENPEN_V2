@@ -16,6 +16,11 @@ include "../references/php/defines.php";
                     $code = mysqli_query($db_conn,"SELECT LAST_INSERT_ID() AS CODE FROM GREEN_PROJECTS")->fetch_assoc()["CODE"];
                     $result["success"] = true;
                     $result["projectcode"] = $code;
+                    $PrjJson = json_decode(file_get_contents("../references/json/scriptskeleton.json"),true);
+                    $PrjJson["NAME"] = $_GET["project_name"];
+                    $PrjJson["POSTER"] = "../../../" . GP_USER_DEFAULT_PROJECT_POSTER;
+                    mkdir(GP_USER_RESOURCE_PATH . '/' . $_COOKIE["active_user_id"] .'/'.$code);
+                    file_put_contents(GP_USER_RESOURCE_PATH . '/' . $_COOKIE["active_user_id"] . '/' . $code . "/GP_SCRIPT.json",json_encode($PrjJson,JSON_PRETTY_PRINT));
                  }
                  else
                  {

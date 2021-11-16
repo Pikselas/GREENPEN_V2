@@ -1,3 +1,5 @@
+var PROJECT_JSON = {};
+var DefaultPath = "";
 window.addEventListener("dragover",function(e){
     e = e || event;
     e.preventDefault();
@@ -6,6 +8,26 @@ window.addEventListener("dragover",function(e){
     e = e || event;
     e.preventDefault();
   },false);
+document.body.onload = ()=>{
+    let PathData = GetPathData();
+    if(PathData.hasOwnProperty("code"))
+    {
+        PerformAjaxRequest("GET",{},"../server/greeneditor.php?type=GET_PROJECT&&code=" + PathData["code"],"",true,(response)=>{
+            response = JSON.parse(response);
+            if(response["success"])
+            {
+                if (response.hasOwnProperty("def_path"))
+                {
+                    DefaultPath = response["def_path"];
+                    delete response["def_path"];
+                }
+                delete response["success"];
+                PROJECT_JSON = response;
+              document.getElementById("ProjectArea").style.backgroundImage = `URL(${DefaultPath + response["POSTER"]})`;
+            }
+        });
+    }
+}
 document.getElementById("ProjectArea").ondragover = (ev)=>{
     ev.preventDefault();
 };
