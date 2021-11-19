@@ -45,7 +45,20 @@
     font-weight: 600;
     font-size: x-large;
     font-family: monospace;
+    align-items: center;
+}
+.ImageInsertPanel input[type = "text"]
+{
+    width: 50%;
     text-align: center;
+    border-radius: 5px;
+    border: none;
+    background-color: #c081ff38;
+    color: white;
+    font-size: medium;
+    font-weight: 600;
+    font-family: fantasy;
+    padding: 5px;
 }
 .SubImagePanel
 {

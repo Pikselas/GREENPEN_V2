@@ -23,7 +23,7 @@ document.body.onload = ()=>{
                 }
                 delete response["success"];
                 PROJECT_JSON = response;
-              document.getElementById("ProjectArea").style.backgroundImage = `URL(${DefaultPath + response["POSTER"]})`;
+              //document.getElementById("ProjectArea").style.backgroundImage = `URL(${DefaultPath + response["POSTER"]})`;
             }
         });
     }
@@ -57,31 +57,52 @@ function GetAddPanel()
             ev.preventDefault();
         }
     };
-    AddPanel.onclick = (ev)=>{
-        let FileList = document.createElement("input");
-        FileList.type = "file";
-        FileList.multiple = true;
-        FileList.onchange = ()=>{
-            //all files should be added to a global file object
-            for(let i = 0;i<FileList.files.length;i++)
-            {
-                let Img = document.createElement("img");
-                Img.src = URL.createObjectURL(FileList.files[i]);
-                Img.draggable = true;
-                Img.id = (Math.random() + 1).toString(36).substring(7);
-                Img.ondragstart = (ev)=>{
-                    ev.dataTransfer.setData("ChildID",Img.id);
-                }
-                ev.target.parentElement.children[2].appendChild(Img);
+    let AddPanelInput = document.createElement("input");
+    AddPanelInput.type = "text";
+    AddPanelInput.placeholder = "URL";
+    AddPanelInput.onkeydown = (ev) =>
+    {
+        if(ev.key == "Enter")
+        {
+            let Img = document.createElement("img");
+            Img.src = ev.target.value;
+            Img.draggable = true;
+            Img.id = (Math.random() + 1).toString(36).substring(7);
+            Img.ondragstart = (ev)=>{
+                ev.dataTransfer.setData("ChildID",Img.id);
             }
+            AddPanel.parentElement.children[2].appendChild(Img);
         }
-        FileList.click();
+    }
+    AddPanel.onclick = (ev)=>{
+        if(ev.target == AddPanel)
+        {
+            let FileList = document.createElement("input");
+            FileList.type = "file";
+            FileList.multiple = true;
+            FileList.onchange = ()=>{
+                //all files should be added to a global file object
+                for(let i = 0;i<FileList.files.length;i++)
+                {
+                    let Img = document.createElement("img");
+                    Img.src = URL.createObjectURL(FileList.files[i]);
+                    Img.draggable = true;
+                    Img.id = (Math.random() + 1).toString(36).substring(7);
+                    Img.ondragstart = (ev)=>{
+                        ev.dataTransfer.setData("ChildID",Img.id);
+                    }
+                    ev.target.parentElement.children[2].appendChild(Img);
+                }
+            }
+            FileList.click();
+      }
     }
     AddPanel.ondrop = (ev) =>{
         let TempChild = document.getElementById(ev.dataTransfer.getData("ChildID"));
         TempChild.parentElement.removeChild(TempChild);
         ev.target.parentElement.children[2].appendChild(TempChild)
     }
+    AddPanel.appendChild(AddPanelInput);
     return AddPanel;
 }
 function CreateImageSection()

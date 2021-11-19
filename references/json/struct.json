@@ -2,8 +2,8 @@
    "NAME"    : "" , 
    "POSTER"  : "" ,
    "VIDEOS"  : [{"ID" : "" , "PATH" : ""}],
-   "IMAGES"  : {"FRAME_ID1" : {"img1" : "path" , "img2" : "path"},
-                "FRAME_ID2" : {"img1" : "path" , "img2" : "path"}
+   "IMAGES"  : {"FRAME_ID1" : [{"img_ID" : "ID1","path" : "path1","path_type" : "URL/LOCAL"} ,{"img_ID" : "ID2","path" : "path2","path_type" : "URL/LOCAL"} ],
+                "FRAME_ID2" : [{"img_ID" : "ID1","path" : "path1","path_type" : "URL/LOCAL"} ,{"img_ID" : "ID2","path" : "path2","path_type" : "URL/LOCAL"} ]
               },
    "SYNC_IMV": {
                 "VID_ID" : { "60" :{"60.567" : "img_id1" , "60.456" : "img_id3"} , 
