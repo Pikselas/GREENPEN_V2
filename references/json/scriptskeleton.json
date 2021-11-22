@@ -1,7 +1,7 @@
 {
     "NAME"    : "" , 
     "POSTER"  : "" ,
-    "VIDEOS"  : [] ,
+    "VIDEOS"  : {} ,
     "IMAGES"  : {} ,
     "SYNC_IMV": {} ,
     "SYNC_V"  : {} ,

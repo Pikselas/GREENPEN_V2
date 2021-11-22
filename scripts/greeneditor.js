@@ -22,6 +22,12 @@ document.body.onload = ()=>{
                     delete response["def_path"];
                 }
                 delete response["success"];
+                Object.keys(response).forEach((key)=>{
+                    if(response[key].constructor == [].constructor)
+                    {
+                        response[key] = {};
+                    }
+                })
                 PROJECT_JSON = response;
               //document.getElementById("ProjectArea").style.backgroundImage = `URL(${DefaultPath + response["POSTER"]})`;
             }
@@ -44,6 +50,8 @@ document.getElementById("ProjectArea").ondrop = (ev)=>{
         Parent.appendChild(TempChild);
     }
 }
+//creates an image add panel which will be added to a image frame 
+// add panel will be used to add new images
 function GetAddPanel()
 {
     let AddPanel = document.createElement("div");
@@ -105,9 +113,9 @@ function GetAddPanel()
     AddPanel.appendChild(AddPanelInput);
     return AddPanel;
 }
-function CreateImageSection()
+//create a new image frame
+function CreateImageSection(ID,width = null,height = null , Left , Top)
 {
-    let ParentItem = document.getElementById("ProjectArea");
     let MainPanel = document.createElement("div");
 
     MainPanel.className = "ImagePanel";
@@ -118,26 +126,39 @@ function CreateImageSection()
             ev.dataTransfer.setData("ChildID",ev.target.id);
             ev.dataTransfer.setData("x",ev.layerX);
             ev.dataTransfer.setData("y",ev.layerY);
-            ev.target.style.opacity = 0;
+            setTimeout(()=>{
+                ev.target.hidden = true;
+            },1)
         }
     };
     MainPanel.ondragend = (ev)=>{
-        ev.target.style.opacity = 1;
+        ev.target.hidden = false;
+        console.log(ev.target.style.top);
     }
-    MainPanel.id = (Math.random() + 1).toString(36).substring(7);
-    MainPanel.style.left = Math.floor(Math.random() * (ParentItem.offsetWidth - (ParentItem.offsetWidth * 30 / 100))) + "px";
-    MainPanel.style.top = Math.floor(Math.random() * (ParentItem.offsetHeight - (ParentItem.offsetHeight * 40 / 100))) + "px";
+    MainPanel.id = ID;
+    MainPanel.style.left = Left;
+    MainPanel.style.top = Top;
+    if(width != null)
+    {
+        MainPanel.style.width = width;
+    }
+    if(height != null)
+    {
+        MainPanel.style.height = height;
+    }
 
     let PanelCloseButton = document.createElement("button");
     let PanelAddButton = document.createElement("button");
 
     PanelCloseButton.innerHTML = "x";
     PanelCloseButton.className = "ImageFrameCloseButton";
+    //when the X button will be clicked the frame will be removed including all the images
     PanelCloseButton.onclick = (ev)=>{
         document.getElementById("ProjectArea").removeChild(ev.target.parentElement);
     }
     PanelAddButton.className = "ImageFrameAddButton";
     PanelAddButton.innerHTML = "+";
+    //when the plus button will be clicked the add panel will be appeared
     PanelAddButton.onclick = (ev)=>{
         let panel = ev.target.parentElement.children[3];
         if(panel.style.display == "none")
@@ -157,11 +178,10 @@ function CreateImageSection()
 
     MainPanel.appendChild(SubPanel);
     MainPanel.appendChild(GetAddPanel());
-    ParentItem.appendChild(MainPanel);
+    return MainPanel;
 }
-function CreateVideoItem()
+function CreateVideoItem(ID,width = null,height = null,Left,Top)
 {
-    let ParentItem = document.getElementById("ProjectArea");
     let VidPanel = document.createElement("div");
     VidPanel.className = "VideoPanel";
     VidPanel.draggable = true;
@@ -177,9 +197,17 @@ function CreateVideoItem()
     VidPanel.ondragend = (ev)=>{
         ev.target.style.opacity = 1;
     }
-    VidPanel.id = (Math.random() + 1).toString(36).substring(7);
-    VidPanel.style.left = Math.floor(Math.random() * (ParentItem.offsetWidth - (ParentItem.offsetWidth * 30 / 100))) + "px";
-    VidPanel.style.top = Math.floor(Math.random() * (ParentItem.offsetHeight - (ParentItem.offsetHeight * 40 / 100))) + "px";
+    VidPanel.id = ID;
+    VidPanel.style.left = Left
+    VidPanel.style.top = Top;
+    if(width != null)
+    {
+        VidPanel.style.width = width;
+    }
+    if(height != null)
+    {
+        VidPanel.style.height = height;
+    }
     let VidPanelCloseButton = document.createElement("button");
     VidPanelCloseButton.innerHTML = "x";
     VidPanelCloseButton.onclick = (ev) =>{
@@ -188,9 +216,28 @@ function CreateVideoItem()
     VidPanel.appendChild(VidPanelCloseButton);
     let VideoObj = document.createElement("video");
     VidPanel.appendChild(VideoObj);
-    document.getElementById("ProjectArea").appendChild(VidPanel);
+    return VidPanel;
 }
-function AddImage(ev)
+//appends new image frame in the project
+function AddNewVideoSection()
 {
-    console.log(ev);
+   let ParentItem = document.getElementById("ProjectArea");
+   Left = Math.floor(Math.random() * (ParentItem.offsetWidth - (ParentItem.offsetWidth * 30 / 100))) + "px";
+   Top = Math.floor(Math.random() * (ParentItem.offsetHeight - (ParentItem.offsetHeight * 40 / 100))) + "px";
+   ID = (Math.random() + 1).toString(36).substring(7);
+   ParentItem.appendChild(CreateVideoItem(ID,null,null,Left,Top));
+}
+function AddNewImageSection()
+{
+   let ParentItem = document.getElementById("ProjectArea");
+   Left = Math.floor(Math.random() * (ParentItem.offsetWidth - (ParentItem.offsetWidth * 30 / 100))) + "px";
+   Top = Math.floor(Math.random() * (ParentItem.offsetHeight - (ParentItem.offsetHeight * 40 / 100))) + "px";
+   ID = (Math.random() + 1).toString(36).substring(7);
+   PROJECT_JSON["IMAGES"][ID] = {};
+   PROJECT_JSON["IMAGES"][ID]["LEFT"] = Left;
+   PROJECT_JSON["IMAGES"][ID]["TOP"] = Top;
+   PROJECT_JSON["IMAGES"][ID]["WIDTH"] = null;
+   PROJECT_JSON["IMAGES"][ID]["HEIGHT"] = null;
+   PROJECT_JSON["IMAGES"][ID]["IMAGE_LIST"] = [];
+   ParentItem.appendChild(CreateImageSection(ID,null,null,Left,Top));
 }
