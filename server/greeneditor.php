@@ -20,5 +20,39 @@ include "../references/php/defines.php";
         }
         echo json_encode($Result);
     }
+    else if($_GET["type"] == "UPDATE_PROJECT" && isset($_GET["code"]) && isset($_GET["JSON"]))
+    { 
+      $result = ["success"=>false,"error"=>null];
+      if(isset($_COOKIE["active_user_id"]))
+      {
+        if($db_conn = mysqli_connect(DATABASE_HOST,DATABASE_USER,DATABASE_PASSWORD,DATABASE_NAME,DATABASE_PORT))
+        {
+          $sql = sprintf("SELECT AUTHORID FROM GREEN_PROJECTS WHERE EXISTS(SELECT CODE FROM PROJECT_ACCESS WHERE CODE = %s AND USERID = %s) AND CODE = %s", $_GET["code"] , $_COOKIE["active_user_id"],$_GET["code"]);
+          if($qRes = mysqli_query($db_conn,$sql))
+          {
+            if($qRes->num_rows > 0)
+            {
+              //success
+               mysqli_query($db_conn , sprintf("UPDATE GREEN_PROJECTS SET UPDATED = NOW() WHERE CODE = %s",$_GET["code"]));
+               $ProjPath = GP_USER_RESOURCE_PATH . '/' . $qRes->fetch_assoc()["AUTHORID"] . '/' . $_GET["code"] . '/GP_SCRIPT.json';
+               if(file_exists($ProjPath))
+               {
+                file_put_contents($ProjPath,$_GET["JSON"]);
+                $result["success"] = true;
+               }
+            }
+          }
+        }
+       if(!$result["success"])
+       {
+         $result["error"] = mysqli_error($db_conn);
+       }
+      }
+      else
+      {
+        $result["error"] = "U need to login to Modify this";
+      }
+      echo json_encode($result);
+    }
   }
 ?>

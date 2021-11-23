@@ -241,3 +241,22 @@ function AddNewImageSection()
    PROJECT_JSON["IMAGES"][ID]["IMAGE_LIST"] = [];
    ParentItem.appendChild(CreateImageSection(ID,null,null,Left,Top));
 }
+function Save()
+{
+    let PathData = GetPathData();
+    if(PathData.hasOwnProperty("code"))
+    {
+        PerformAjaxRequest("GET",{},
+        "../server/greeneditor.php?type=UPDATE_PROJECT&&code=" + PathData["code"] + "&JSON=" + JSON.stringify(PROJECT_JSON)
+        ,"",true,(response)=>{
+            if((response = JSON.parse(response)).success)
+            {
+                alert("Saved");
+            }
+            else
+            {
+                alert(response.error);
+            }
+        })
+    }
+}

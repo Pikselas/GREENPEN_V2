@@ -144,3 +144,10 @@
     position: absolute;
     top: 25px;
 }
+
+.SaveBtn , .AddVideoBtn , .AddImageBtn
+{
+    width: 2%;
+    height: 90%;
+    cursor: pointer;
+}
