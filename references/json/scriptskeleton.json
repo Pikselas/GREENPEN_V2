@@ -3,6 +3,7 @@
     "POSTER"  : "" ,
     "VIDEOS"  : {} ,
     "IMAGES"  : {} ,
+    "IMAGE_FRAMES" : {},
     "SYNC_IMV": {} ,
     "SYNC_V"  : {} ,
     "SCENES"  : {}

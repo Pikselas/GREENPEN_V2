@@ -2,13 +2,15 @@
    "NAME"    : "" , 
    "POSTER"  : "" ,
    "VIDEOS"  : {  "VID_ID1" : {"PATH" : "" , "PATH_TYPE" : "URL/LOCAL","TOP": "100px" , "LEFT" : "150px" , "HEIGHT" : "400px" , "WIDTH" : "300px"}},
-   "IMAGES"  : {
+   "IMAGES"  : {"img_ID" : {"path" : "path" , "path_type" : "URL/LOCAL"}},
+   "IMAGE_FRAMES"  : {
                 "FRAME_ID1" : {  
                                 "TOP" : "100px",
                                 "LEFT": "100px",
                                 "WIDTH" : "300px",
                                 "HEIGHT" : "400px",
-                                "IMAGE_LIST" : [{"img_ID" : "ID1","path" : "path1","path_type" : "URL/LOCAL"} ,{"img_ID" : "ID2","path" : "path2","path_type" : "URL/LOCAL"}]}
+                                "IMAGE_LIST" : {"IMG_ID1" : "" , "IMG_ID2" : ""}
+                              }
                 },
    "SYNC_IMV": {
                 "VID_ID" : { "60" :{"60.567" : "img_id1" , "60.456" : "img_id3"} , 
