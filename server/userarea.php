@@ -20,6 +20,7 @@ include "../references/php/defines.php";
                     $PrjJson["NAME"] = $_GET["project_name"];
                     $PrjJson["POSTER"] = "../../../" . GP_USER_DEFAULT_PROJECT_POSTER;
                     mkdir(GP_USER_RESOURCE_PATH . '/' . $_COOKIE["active_user_id"] .'/'.$code);
+                    mkdir(GP_USER_RESOURCE_PATH . '/' . $_COOKIE["active_user_id"] .'/'.$code . '/videos');
                     file_put_contents(GP_USER_RESOURCE_PATH . '/' . $_COOKIE["active_user_id"] . '/' . $code . "/GP_SCRIPT.json",json_encode($PrjJson,JSON_PRETTY_PRINT));
                     mysqli_query($db_conn,sprintf("INSERT INTO PROJECT_ACCESS VALUES(%s,%s)",$code,$_COOKIE["active_user_id"]));
                  }

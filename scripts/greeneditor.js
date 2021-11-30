@@ -1,6 +1,7 @@
 var PROJECT_JSON = {};
 var DefaultPath = "";
-var NewAdd = {"VIDEOS" : {} , "FOLDERS" : {}};
+var NewAdd = {"FOLDERS" : {}};
+var Deleted = {"FOLDERS" : [] , "FILES" : []};
 var Changes = {} ; // { ID1 : {"source" : "","dest":"" },ID2 : {"source" : "","dest":"" }}
 var TempFileS = {}; // {ID : {blob : "",dest : "real_path"}}
 window.addEventListener("dragover",function(e){
@@ -32,6 +33,9 @@ document.body.onload = ()=>{
                     }
                 })
                 PROJECT_JSON = response;
+                Object.keys(PROJECT_JSON["IMAGE_FRAMES"]).forEach((k)=>{
+                    setTimeout(SetUpFrames,1,k);
+                })
               //document.getElementById("ProjectArea").style.backgroundImage = `URL(${DefaultPath + response["POSTER"]})`;
             }
         });
@@ -52,6 +56,24 @@ document.getElementById("ProjectArea").ondrop = (ev)=>{
         Parent.removeChild(TempChild);
         Parent.appendChild(TempChild);
     }
+}
+function SetUpFrames(FrameID)
+{
+    let Area = document.getElementById("ProjectArea");
+    let ObjDtls = PROJECT_JSON["IMAGE_FRAMES"][FrameID];
+    let Frame = CreateImageSection(FrameID,ObjDtls["WIDTH"],ObjDtls["HEIGHT"],ObjDtls["LEFT"],ObjDtls["TOP"]);
+    Object.keys(ObjDtls["IMAGE_LIST"]).forEach((ky)=>{
+        let ImgDtls = PROJECT_JSON["IMAGES"][ky];
+        let Img = document.createElement("img");
+        Img.src = (ImgDtls["path_type"] == "URL" ? ImgDtls["path"] : DefaultPath + '/' + ImgDtls["path"]);
+        Img.draggable = true;
+        Img.id = ky;
+        Img.ondragstart = (ev)=>{
+            ev.dataTransfer.setData("ChildID",Img.id);
+        }
+        Frame.children[2].appendChild(Img);
+    });
+    Area.appendChild(Frame);
 }
 //creates an image add panel which will be added to a image frame 
 // add panel will be used to add new images
@@ -152,6 +174,7 @@ function GetAddPanel()
                                                 "dest" : NewPath};
                 }
             }
+            PROJECT_JSON["IMAGES"][TempChild.id]["path"] = NewPath;
       }
     }
     AddPanel.appendChild(AddPanelInput);
@@ -177,7 +200,8 @@ function CreateImageSection(ID,width = null,height = null , Left , Top)
     };
     MainPanel.ondragend = (ev)=>{
         ev.target.hidden = false;
-        console.log(ev.target.style.top);
+        PROJECT_JSON["IMAGE_FRAMES"][MainPanel.id]["TOP"] = MainPanel.style.top;
+        PROJECT_JSON["IMAGE_FRAMES"][MainPanel.id]["LEFT"] = MainPanel.style.left;
     }
     MainPanel.id = ID;
     MainPanel.style.left = Left;
@@ -274,11 +298,16 @@ function AddNewVideoSection()
 }
 function RemoveImageSection(ID)
 {
-   Object.keys(PROJECT_JSON["IMAGE_FRAMES"][ID]["IMAGE_LIST"]).forEach((ky)=>{
+    Object.keys(PROJECT_JSON["IMAGE_FRAMES"][ID]["IMAGE_LIST"]).forEach((ky)=>{
+    let ImagePath = PROJECT_JSON["IMAGES"][ky]["path"];
     delete PROJECT_JSON["IMAGES"][ky];
     if(TempFileS.hasOwnProperty(ky))
     {
         delete TempFileS[ky];
+    }
+    else
+    {
+        Deleted["FILES"].push(ImagePath);
     }
     if(Changes.hasOwnProperty(ky))
     {
@@ -288,6 +317,10 @@ function RemoveImageSection(ID)
    if(NewAdd["FOLDERS"].hasOwnProperty(ID))
    {
        delete NewAdd["FOLDERS"][ID];
+   }
+   else
+   {
+     Deleted["FOLDERS"].push(ID);
    }
    delete PROJECT_JSON["IMAGE_FRAMES"][ID];
 }
@@ -308,20 +341,28 @@ function AddNewImageSection()
 }
 function Save()
 {
-    let PathData = GetPathData();
-    if(PathData.hasOwnProperty("code"))
-    {
-        PerformAjaxRequest("GET",{},
-        "../server/greeneditor.php?type=UPDATE_PROJECT&&code=" + PathData["code"] + "&JSON=" + JSON.stringify(PROJECT_JSON)
-        ,"",true,(response)=>{
-            if((response = JSON.parse(response)).success)
-            {
-                alert("Saved");
-            }
-            else
-            {
-                alert(response.error);
-            }
-        })
-    }
+  let PathData = GetPathData();
+  if(PathData.hasOwnProperty("code"))
+  {
+      let TmpFLDests = [];
+      let FrmDT = CreateFormData({"JSON" : JSON.stringify(PROJECT_JSON),"CHANGES" : JSON.stringify(Changes) ,
+                                 "NEW_ADD" : JSON.stringify(NewAdd) ,"DELETED" : JSON.stringify(Deleted)});
+      Object.keys(TempFileS).forEach((ky)=>{
+        TmpFLDests.push(TempFileS[ky]["dest"]);
+        FrmDT.append("TempFiles[]" , TempFileS[ky]["blob"]);
+      });
+      FrmDT.append("TempFilePaths",JSON.stringify(TmpFLDests));
+      PerformAjaxRequest("POST" ,{},"../server/greeneditor.php?type=UPDATE_PROJECT&&code=" + PathData["code"],FrmDT,true,(response)=>{
+          console.log(response);
+        response = JSON.parse(response);
+        if(response.success)
+        {
+            NewAdd = {"FOLDERS" : {}};
+            Deleted = {"FOLDERS" : [] , "FILES" : []};
+            Changes = {} ;
+            TempFileS = {};
+            alert("saved");
+        }
+      });
+  }
 }

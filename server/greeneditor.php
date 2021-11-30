@@ -20,7 +20,7 @@ include "../references/php/defines.php";
         }
         echo json_encode($Result);
     }
-    else if($_GET["type"] == "UPDATE_PROJECT" && isset($_GET["code"]) && isset($_GET["JSON"]))
+    else if($_GET["type"] == "UPDATE_PROJECT" && isset($_GET["code"]))
     { 
       $result = ["success"=>false,"error"=>null];
       if(isset($_COOKIE["active_user_id"]))
@@ -33,13 +33,46 @@ include "../references/php/defines.php";
             if($qRes->num_rows > 0)
             {
               //success
+              $result["success"] = true;
                mysqli_query($db_conn , sprintf("UPDATE GREEN_PROJECTS SET UPDATED = NOW() WHERE CODE = %s",$_GET["code"]));
-               $ProjPath = GP_USER_RESOURCE_PATH . '/' . $qRes->fetch_assoc()["AUTHORID"] . '/' . $_GET["code"] . '/GP_SCRIPT.json';
-               if(file_exists($ProjPath))
+               $ProjPath = GP_USER_RESOURCE_PATH . '/' . $qRes->fetch_assoc()["AUTHORID"] . '/' . $_GET["code"] ;
+               $ProjScriptPath = $ProjPath . '/GP_SCRIPT.json';
+               $NewAdd = json_decode($_POST["NEW_ADD"],true);
+               $Changes = json_decode($_POST["CHANGES"],true);
+               foreach($NewAdd["FOLDERS"] as $folder => $empt)
                {
-                file_put_contents($ProjPath,$_GET["JSON"]);
-                $result["success"] = true;
+                 mkdir($ProjPath . '/' . $folder);
                }
+               foreach($Changes as $chng)
+               {
+                 //moving files from one folder to onother
+                 rename($ProjPath . '/' .$chng["source"],$ProjPath . '/' .$chng["dest"]);
+               }
+               if(isset($_FILES["TempFiles"]))
+               {
+               $TempFileDest = json_decode($_POST["TempFilePaths"],true);
+               $FileSize = count($_FILES["TempFiles"]["tmp_name"]);
+               for($i = 0 ; $i < $FileSize ; $i++)
+               {
+                 move_uploaded_file($_FILES["TempFiles"]["tmp_name"][$i],$ProjPath .'/'. $TempFileDest[$i]);
+               }
+               }
+               $Deleted = json_decode($_POST["DELETED"],true);
+               foreach($Deleted["FILES"] as $fl)
+               {
+                 if(is_file($ProjPath . '/' . $fl))
+                 {
+                  unlink($ProjPath . '/' . $fl);
+                 }
+               }
+               foreach($Deleted["FOLDERS"] as $dir)
+               {
+                 if(is_dir($ProjPath . '/' . $dir))
+                 {
+                   rmdir($ProjPath . '/' .$dir);
+                 }
+               }
+              file_put_contents($ProjScriptPath,json_encode(json_decode($_POST["JSON"]),JSON_PRETTY_PRINT));
             }
           }
         }
