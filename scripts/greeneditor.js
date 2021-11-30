@@ -34,6 +34,10 @@ document.body.onload = ()=>{
                 })
                 PROJECT_JSON = response;
                 Object.keys(PROJECT_JSON["IMAGE_FRAMES"]).forEach((k)=>{
+                    if(PROJECT_JSON["IMAGE_FRAMES"][k]["IMAGE_LIST"].constructor == [].constructor)
+                    {
+                        PROJECT_JSON["IMAGE_FRAMES"][k]["IMAGE_LIST"] = {};
+                    }
                     setTimeout(SetUpFrames,1,k);
                 })
               //document.getElementById("ProjectArea").style.backgroundImage = `URL(${DefaultPath + response["POSTER"]})`;
