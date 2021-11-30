@@ -4,7 +4,7 @@ include "../references/php/defines.php";
  {
      if($db = mysqli_connect(DATABASE_HOST,DATABASE_USER,DATABASE_PASSWORD,DATABASE_NAME,DATABASE_PORT))
       {
-        $SQL = sprintf("SELECT USERID,PROFILEPIC FROM GREEN_USERS WHERE USERNAME = '%s'",$_GET["greenuser"]);
+        $SQL = sprintf("SELECT USERNAME,PROFILEPIC FROM GREEN_USERS WHERE USERID = '%s'",$_GET["greenuser"]);
         if($res = mysqli_query($db,$SQL))
         {
             $res = $res->fetch_assoc();

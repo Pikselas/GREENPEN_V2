@@ -1,4 +1,5 @@
 var SuppliedData = GetPathData();
+var ResPonse = {};
 document.body.onload = ()=>{
     if(SuppliedData.hasOwnProperty("greenuser"))
     {
@@ -7,13 +8,14 @@ document.body.onload = ()=>{
             if(response.hasOwnProperty("PROFILEPIC"))
             {
                 document.getElementById("ProfilePic").src = response["PROFILEPIC"];
-                document.getElementById("UserName").innerHTML = SuppliedData["greenuser"];
+                document.getElementById("UserName").innerHTML = response["USERNAME"];
+                ResPonse = response;
             }
         })
     }
 }
 document.getElementById("ProfilePic").onclick = ()=>{
-    if(SuppliedData["greenuser"] == GetCookie()["active_user_name"])
+    if(ResPonse["USERNAME"] == GetCookie()["active_user_name"])
     {
         let InPut = document.createElement("input");
         InPut.type = "file";
@@ -22,7 +24,9 @@ document.getElementById("ProfilePic").onclick = ()=>{
             PerformAjaxRequest("POST",{},"../server/userprofile.php",CreateFormData({ProfileImage:InPut.files[0]}),true,(response)=>{
                 if(response == "true")
                 {
-                    document.getElementById("ProfilePic").src = URL.createObjectURL(InPut.files[0]);
+                    let Src = URL.createObjectURL(InPut.files[0]);
+                    document.getElementById("ProfilePic").src = Src
+                    setTimeout(()=>{URL.revokeObjectURL(Src)},1);
                 }
             })
         }
