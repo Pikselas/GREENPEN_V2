@@ -367,6 +367,10 @@ function Save()
             TempFileS = {};
             alert("saved");
         }
+        else
+        {
+            alert(response.error);
+        }
       });
   }
 }
