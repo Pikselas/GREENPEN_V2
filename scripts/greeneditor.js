@@ -33,13 +33,17 @@ document.body.onload = ()=>{
                     }
                 })
                 PROJECT_JSON = response;
-                Object.keys(PROJECT_JSON["IMAGE_FRAMES"]).forEach((k)=>{
+                
+                let ImageSetter = ()=>{Object.keys(PROJECT_JSON["IMAGE_FRAMES"]).forEach((k)=>{
                     if(PROJECT_JSON["IMAGE_FRAMES"][k]["IMAGE_LIST"].constructor == [].constructor)
                     {
                         PROJECT_JSON["IMAGE_FRAMES"][k]["IMAGE_LIST"] = {};
                     }
-                    setTimeout(SetUpFrames,1,k);
-                })
+                    setTimeout(SetUpFrames,1,k);});};
+                setTimeout(ImageSetter , 1);
+                setTimeout(() => {
+                    Object.keys(PROJECT_JSON["VIDEOS"]).forEach(SetUpVideos);
+                }, 1);
               //document.getElementById("ProjectArea").style.backgroundImage = `URL(${DefaultPath + response["POSTER"]})`;
             }
         });
@@ -60,6 +64,12 @@ document.getElementById("ProjectArea").ondrop = (ev)=>{
         Parent.removeChild(TempChild);
         Parent.appendChild(TempChild);
     }
+}
+function SetUpVideos(ID)
+{
+    let RealPath = (PROJECT_JSON["VIDEOS"][ID]["PATH_TYPE"] == "URL" ? PROJECT_JSON["VIDEOS"][ID]["PATH"] : DefaultPath + '/' + PROJECT_JSON["VIDEOS"][ID]["PATH"]);
+    document.getElementById("ProjectArea").appendChild(CreateVideoItem(ID , PROJECT_JSON["VIDEOS"][ID]["WIDTH"],
+    PROJECT_JSON["VIDEOS"][ID]["HEIGHT"],PROJECT_JSON["VIDEOS"][ID]["LEFT"],PROJECT_JSON["VIDEOS"][ID]["TOP"],RealPath));
 }
 function SetUpFrames(FrameID)
 {
@@ -253,7 +263,7 @@ function CreateImageSection(ID,width = null,height = null , Left , Top)
     MainPanel.appendChild(GetAddPanel());
     return MainPanel;
 }
-function CreateVideoItem(ID,width = null,height = null,Left,Top)
+function CreateVideoItem(ID,width = null,height = null,Left,Top,Source)
 {
     let VidPanel = document.createElement("div");
     VidPanel.className = "VideoPanel";
@@ -288,17 +298,45 @@ function CreateVideoItem(ID,width = null,height = null,Left,Top)
     }
     VidPanel.appendChild(VidPanelCloseButton);
     let VideoObj = document.createElement("video");
+    VideoObj.src = Source;
+    VideoObj.controls = true;
     VidPanel.appendChild(VideoObj);
     return VidPanel;
 }
-//appends new image frame in the project
 function AddNewVideoSection()
 {
-   let ParentItem = document.getElementById("ProjectArea");
-   Left = Math.floor(Math.random() * (ParentItem.offsetWidth - (ParentItem.offsetWidth * 30 / 100))) + "px";
-   Top = Math.floor(Math.random() * (ParentItem.offsetHeight - (ParentItem.offsetHeight * 40 / 100))) + "px";
-   ID = (Math.random() + 1).toString(36).substring(7);
-   ParentItem.appendChild(CreateVideoItem(ID,null,null,Left,Top));
+   let Url = prompt("ENTER LOCAL / URL","LOCAL");
+   let TempFile = null;
+   if(Url != null)
+   {
+    let ParentItem = document.getElementById("ProjectArea");
+    let Left = Math.floor(Math.random() * (ParentItem.offsetWidth - (ParentItem.offsetWidth * 30 / 100))) + "px";
+    let Top = Math.floor(Math.random() * (ParentItem.offsetHeight - (ParentItem.offsetHeight * 40 / 100))) + "px";
+    let ID = (Math.random() + 1).toString(36).substring(7);
+    if(Url == "LOCAL")
+    {
+        let TempFileSelector = document.createElement("input");
+        TempFileSelector.type = "file";
+        TempFileSelector.accept = "video/*";
+        TempFileSelector.onchange = ()=>{
+             TempFile = TempFileSelector.files[0];
+             Url = URL.createObjectURL(TempFile);
+             let FinalPath = "videos/" + TempFile["name"];
+             TempFileS[ID] = {"blob" : TempFile , "dest" : FinalPath};
+             PROJECT_JSON["VIDEOS"][ID] = {"PATH" : FinalPath ,"PATH_TYPE" : "LOCAL" , "TOP" : Top , "LEFT" : Left , "HEIGHT" : null , "WIDTH" : null};
+             ParentItem.appendChild(CreateVideoItem(ID,null,null,Left,Top,Url));
+             setTimeout(()=>{
+                 URL.revokeObjectURL(Url);
+             },10);
+        };
+        TempFileSelector.click();
+    }
+    else
+    {
+        PROJECT_JSON["VIDEOS"][ID] = {"PATH" : Url ,"PATH_TYPE" : "URL" , "TOP" : Top , "LEFT" : Left , "HEIGHT" : null , "WIDTH" : null};
+        ParentItem.appendChild(CreateVideoItem(ID,null,null,Left,Top,Url));
+    }
+   }
 }
 function RemoveImageSection(ID)
 {

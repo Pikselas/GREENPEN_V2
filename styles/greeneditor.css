@@ -65,7 +65,7 @@
     position: absolute;
     top: 25px;
     width: 100%;
-    height: 92%;
+    height: 100%;
     overflow-y: scroll;
     scrollbar-color: #5244708c #1d0d2a66 ;
     scrollbar-width: thin;
@@ -140,9 +140,9 @@
 .VideoPanel video
 {
     width: 100%;
-    height: 94%;
-    position: absolute;
-    top: 25px;
+    height: 100%;
+    /* position: absolute; */
+    /* top: 25px; */
 }
 
 .SaveBtn , .AddVideoBtn , .AddImageBtn
