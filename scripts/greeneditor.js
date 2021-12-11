@@ -274,11 +274,15 @@ function CreateVideoItem(ID,width = null,height = null,Left,Top,Source)
           ev.dataTransfer.setData("ChildID",ev.target.id);
           ev.dataTransfer.setData("x",ev.layerX);
           ev.dataTransfer.setData("y",ev.layerY);
-          ev.target.style.opacity = 0;
+          setTimeout(()=>{
+            ev.target.hidden = true;
+        },1)
       }
     }
     VidPanel.ondragend = (ev)=>{
-        ev.target.style.opacity = 1;
+        PROJECT_JSON["VIDEOS"][VidPanel.id]["TOP"] = VidPanel.style.top;
+        PROJECT_JSON["VIDEOS"][VidPanel.id]["LEFT"] = VidPanel.style.left;
+        ev.target.hidden = false;
     }
     VidPanel.id = ID;
     VidPanel.style.left = Left
@@ -295,6 +299,20 @@ function CreateVideoItem(ID,width = null,height = null,Left,Top,Source)
     VidPanelCloseButton.innerHTML = "x";
     VidPanelCloseButton.onclick = (ev) =>{
         ev.target.parentElement.parentElement.removeChild(ev.target.parentElement);
+        let vidID = ev.target.parentElement.id;
+        if(TempFileS.hasOwnProperty(vidID))
+        {
+            delete TempFileS[vidID];
+        }
+        else
+        {
+            if(PROJECT_JSON["VIDEOS"][vidID]["PATH_TYPE"] == "LOCAL")
+            {
+             Deleted["FILES"].push(PROJECT_JSON["VIDEOS"][vidID]["PATH"]);
+            }
+        }
+        delete PROJECT_JSON["VIDEOS"][vidID];
+        //let SyncData = PROJECT_JSON["SYNC_IMV"][ID];
     }
     VidPanel.appendChild(VidPanelCloseButton);
     let VideoObj = document.createElement("video");
