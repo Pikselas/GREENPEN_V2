@@ -16,6 +16,8 @@
     height: 95%;
     background-color: rgb(31, 18, 59);
     overflow: scroll;
+    scrollbar-width:thin;
+    scrollbar-color: #0e03268c #1d0d2a66;
     scrollbar-width: thin;
 }
 .ImagePanel
