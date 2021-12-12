@@ -1,0 +1,64 @@
+body
+{
+    background-color: blueviolet;
+}
+.TrCol
+{
+    transition: all 2s cubic-bezier(.68,-0.55,.27,1.55);
+    /* cursor: pointer; */
+    width: 400px;
+    height: 400px;
+    position: fixed;
+    top: 25%;
+    left: 35%;
+    transform: rotate(45deg);
+}
+.TrCol:hover
+{
+    transform: rotate(270deg);
+}
+.TrCol:hover .TrU ,.TrCol:hover .TrB 
+{
+    transform: rotateX(90deg);
+}
+.TrCol:hover .TrL ,.TrCol:hover .TrR
+{
+    transform: rotateY(90deg);
+}
+.TrB , .TrU , .TrL , .TrR 
+{
+    transition: all 2s cubic-bezier(.68,-0.55,.27,1.55);
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+.TrB
+{
+    transform-origin: bottom;
+    border-left: 200px solid transparent;
+    border-right: 200px solid transparent;
+    border-bottom: 200px solid #431081;
+    bottom: 0%;
+}
+.TrU
+{
+    transform-origin: top;
+    border-left: 200px solid transparent;
+    border-right: 200px solid transparent;
+    border-top: 200px solid #431081;
+}
+.TrL
+{
+    transform-origin: left;
+    border-top: 200px solid transparent;
+	border-left: 200px solid #431081;
+	border-bottom: 200px solid transparent;
+}
+.TrR
+{
+    transform-origin:right;
+    border-top: 200px solid transparent;
+	border-right: 200px solid #431081;
+	border-bottom: 200px solid transparent;
+    right: 0%;
+}
