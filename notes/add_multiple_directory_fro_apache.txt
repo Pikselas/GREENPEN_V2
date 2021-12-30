@@ -1,0 +1,21 @@
+--For adding a directory (as name alias)
+------------------------------------------
+How can we access -> ip/nameAlias
+-----------------    [eg: 127.0.0.1/greendata]
+;;;;;;;;;;;;;
+How to set ;;
+;;;;;;;;;;;;;
+    
+    1.Open httpd.config (Apache)
+    2.Find <Directory "C:/xampp/htdoc"> (...) </Directory> (near line 200)
+    3.Copy all form <Directory "C:/xampp/htdocs"> to <Directory> 
+    4.Paste immediately after that
+    5.Now change <Directory "C:/xampp/htdocs"> line to <Directory "D:/some/directory/you/want/to/add">
+    6.Now find <IfModule alias_module> line (near line 300)
+    7.Under <IfModule alias_module> and </IfModule> add this line -> Alias /greendata "D:/some/directory/you/want/to/add"
+    8.Save
+
+*******************
+    The browser access files with the alias name    
+        but php access files with local file systems
+        

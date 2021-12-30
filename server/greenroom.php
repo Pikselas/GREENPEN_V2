@@ -11,7 +11,7 @@ if(isset($_GET["code"]))
             if($res->num_rows > 0)
             {
                 $ResponseJson = $res->fetch_assoc(); 
-                $ResponseJson["POSTER"] = GP_USER_RESOURCE_PATH.'/'. $ResponseJson["POSTER"];
+                $ResponseJson["POSTER"] = GP_USER_RESOURCE_ALIAS.'/'. $ResponseJson["POSTER"];
                 $ResponseJson["success"] = true;
             }
         }

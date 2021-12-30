@@ -24,7 +24,7 @@
                  mkdir(GP_USER_RESOURCE_PATH . '/' . $ID);
                  setcookie("active_user_id",$ID,0,"/","",true,true);
                  setcookie("active_user_name",$_POST["name"],0,"/","",true);
-                 setcookie("active_user_profile_pic",GP_USER_RESOURCE_PATH .'/'. GP_USER_DEFAULT_PROFILE_PIC,0,"/","",true);
+                 setcookie("active_user_profile_pic",GP_USER_RESOURCE_ALIAS .'/'. GP_USER_DEFAULT_PROFILE_PIC,0,"/","",true);
                  $ResultStat["success"] = true;
               }
               else
@@ -59,7 +59,7 @@
             $ResultStat["success"] = true;
             setcookie("active_user_id",$userDtls["USERID"],0,"/","",true,true);
             setcookie("active_user_name",$_POST["name"],0,"/","",true);
-            setcookie("active_user_profile_pic",GP_USER_RESOURCE_PATH .'/'.$userDtls["PROFILEPIC"],0,"/","",true);
+            setcookie("active_user_profile_pic",GP_USER_RESOURCE_ALIAS .'/'.$userDtls["PROFILEPIC"],0,"/","",true);
             $ResultStat["success"] = true;
           }
           else

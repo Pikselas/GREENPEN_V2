@@ -13,8 +13,8 @@ include "../references/php/defines.php";
                 {
                 $res= $res->fetch_assoc()["AUTHORID"];
                 $Result["success"] = true;
-                $Result["def_path"] = GP_USER_RESOURCE_PATH .'/'.$res.'/'.$_GET["code"];
-                $Result = array_merge($Result,json_decode(file_get_contents($Result["def_path"]."/GP_SCRIPT.json"),true));
+                $Result["def_path"] = GP_USER_RESOURCE_ALIAS .'/'.$res.'/'.$_GET["code"];
+                $Result = array_merge($Result,json_decode(file_get_contents(GP_USER_RESOURCE_PATH . '/' . $res.'/'.$_GET["code"] ."/GP_SCRIPT.json"),true));
                 }
             }
         }

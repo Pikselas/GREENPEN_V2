@@ -42,7 +42,7 @@ include "../references/php/defines.php";
                     $Response = array();
                     while($res1 = $res->fetch_assoc())
                     {
-                        $res1["POSTER"] = GP_USER_RESOURCE_PATH . '/' . $res1["POSTER"];
+                        $res1["POSTER"] = GP_USER_RESOURCE_ALIAS . '/' . $res1["POSTER"];
                         array_push($Response,$res1);
                     }
                     echo json_encode($Response);
