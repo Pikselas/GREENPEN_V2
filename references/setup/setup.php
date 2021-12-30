@@ -13,8 +13,11 @@
           $SQL_FILE = file_get_contents($SQL_FILE);
           mysqli_query($DB,$SQL_FILE);
       }
-      mysqli_close($DB);
-     mkdir(GP_USER_RESOURCE_PATH);
+     mysqli_close($DB);
+     if(!is_dir(GP_USER_RESOURCE_PATH))
+     {
+      mkdir(GP_USER_RESOURCE_PATH);
+     }
      copy("../media/".GP_USER_DEFAULT_PROFILE_PIC,GP_USER_RESOURCE_PATH . '/' . GP_USER_DEFAULT_PROFILE_PIC);
      copy("../media/".GP_USER_DEFAULT_PROJECT_POSTER,GP_USER_RESOURCE_PATH . '/' . GP_USER_DEFAULT_PROJECT_POSTER);
      echo "<h1><b>setup completed</b> for <b><i>GREENPEN</i></b></h1>";
