@@ -13,27 +13,6 @@ window.addEventListener("dragover",function(e){
     e.preventDefault();
   },false);
 document.body.onload = ()=>{
-    let PathData = GetPathData();
-    if(PathData.hasOwnProperty("code"))
-    {
-        PerformAjaxRequest("GET",{},"../server/greeneditor.php?type=GET_PROJECT&&code=" + PathData["code"],"",true,(response)=>{
-            response = JSON.parse(response);
-            if(response["success"])
-            {
-                if (response.hasOwnProperty("def_path"))
-                {
-                    DefaultPath = response["def_path"];
-                    delete response["def_path"];
-                }
-                delete response["success"];
-                Object.keys(response).forEach((key)=>{
-                    if(response[key].constructor == [].constructor)
-                    {
-                        response[key] = {};
-                    }
-                })
-                PROJECT_JSON = response;
-                
                 let ImageSetter = ()=>{Object.keys(PROJECT_JSON["IMAGE_FRAMES"]).forEach((k)=>{
                     if(PROJECT_JSON["IMAGE_FRAMES"][k]["IMAGE_LIST"].constructor == [].constructor)
                     {
@@ -46,9 +25,6 @@ document.body.onload = ()=>{
                 }, 1);
               //document.getElementById("ProjectArea").style.backgroundImage = `URL(${DefaultPath + response["POSTER"]})`;
             }
-        });
-    }
-}
 document.getElementById("ProjectArea").ondragover = (ev)=>{
     ev.preventDefault();
 };
