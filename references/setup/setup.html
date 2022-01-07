@@ -9,10 +9,46 @@
 </head>
 <body>
     <div class="TrCol">
+        <button id="StartSetup">Start Setup</button>
         <div class="TrB"></div>
         <div class="TrU"></div>
         <div class="TrL"></div>
         <div class="TrR"></div>
     </div>
+    <form action="setup1.php" method="post" autocomplete="off" enctype="multipart/form-data">
+        <fieldset>
+            <legend>Storage</legend>
+            <p>
+                <b>Path</b>
+                <input type="text" name="userdatapath" value="../../../resources" placeholder="for storing user media" required/>
+            </p>
+        </fieldset>
+        <fieldset>
+          <legend>Database setup</legend>
+          <p>
+           <b>Host</b>
+           <input type="text" value="localhost" name="host" placeholder="i.e:localhost" required/>
+          </p>
+          <p>
+            <b>Uername</b>
+           <input type="text" value="root" name="user" placeholder="i.e:root" required/>
+          </p>
+          <p>
+            <b>Password</b>
+           <input type="password" name="pass" placeholder="i.e:<empty>"/>
+          </p>
+          <p>
+            <b>Port</b>
+            <input type="number" name="port" value = "3306" placeholder="i.e:3306" required/>
+         </p>
+         <p>
+            <b>Schema</b>
+            <input type="text" name="dbname" value = "GRNPN_KSKCH" placeholder="Automatic Creation" required/>
+         </p>
+        </fieldset>
+        <input type="submit" value="Ok"/>
+    </form>
+      
+    <script src="setup.js"></script>
 </body>
 </html>

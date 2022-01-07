@@ -13,9 +13,30 @@ body
     left: 35%;
     transform: rotate(45deg);
 }
+.TrCol button
+{
+    transition: all .2s;
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    top: 180px;
+    left: 150px;
+    background-color: #431081;
+    border:3px solid #431081;
+    border-radius: 10px;
+    color: aliceblue;
+    font-family: monospace;
+    font-weight: 700;
+    font-size: medium;
+    cursor: pointer;
+}
+.TrCol button:hover
+{
+    background-color: #43108173;
+}
 .TrCol:hover
 {
-    transform: rotate(270deg);
+    transform: rotate(360deg);
 }
 .TrCol:hover .TrU ,.TrCol:hover .TrB 
 {
@@ -61,4 +82,9 @@ body
 	border-right: 200px solid #431081;
 	border-bottom: 200px solid transparent;
     right: 0%;
+}
+form fieldset
+{
+    width: min-content;
+    border-radius: 10px;
 }
