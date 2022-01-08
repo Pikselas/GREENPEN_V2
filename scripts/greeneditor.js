@@ -1,4 +1,3 @@
-var PROJECT_JSON = {};
 var DefaultPath = "";
 var NewAdd = {"FOLDERS" : {}};
 var Deleted = {"FOLDERS" : [] , "FILES" : []};

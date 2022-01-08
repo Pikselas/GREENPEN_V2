@@ -1,7 +1,4 @@
-import tkinter
-from green_snakes import serverside , ui , functional
-from tkinter import filedialog
-from os.path import dirname 
+from green_snakes.ui import *
 if __name__ == "__main__":
     # ui.MAIN_UI()
     # host = "localhost"
@@ -15,7 +12,4 @@ if __name__ == "__main__":
     #     pass
     # webServer.server_close()
     # print("Server stopped.")
-    root = ui.tk.Tk()
-    root.withdraw()
-    path = filedialog.askopenfilename()
-    print(functional.GenerateJSScriptData(functional.ReadJSONData(path),dirname(path)))
+    MAIN_UI({"bg":"seagreen3" , "label" : "midnightblue"})

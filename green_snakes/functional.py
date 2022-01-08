@@ -3,6 +3,9 @@ def ReadJSONData(Path):
     with open(Path) as jsO:
         jsO = loads(jsO.read()) 
         return jsO
+def WriteScriptData(path , dt):
+    with open(path , "w") as fl:
+        fl.write(dt)
 def GenerateJSScriptData(JSONstr , Path):
     for key , dct in JSONstr["VIDEOS"].items():
         if dct["PATH_TYPE"] != "URL":
