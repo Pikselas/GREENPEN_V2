@@ -1,7 +1,15 @@
 var ImgList = [];
-if(PROJECT_JSON["IMAGE_FRAMES"].hasOwnProperty(FRAME_ID))
-{
-    ImgList = Object.keys(PROJECT_JSON["IMAGE_FRAMES"][FRAME_ID]["IMAGE_LIST"]);
+var FRAME_ID = "";
+document.body.onload = ()=>{
+    let projdtls = GetPathData();
+    if(projdtls.hasOwnProperty("frameid"))
+    {
+        FRAME_ID = projdtls["frameid"];
+    }
+    if(PROJECT_JSON["IMAGE_FRAMES"].hasOwnProperty(FRAME_ID))
+    {
+        ImgList = Object.keys(PROJECT_JSON["IMAGE_FRAMES"][FRAME_ID]["IMAGE_LIST"]);
+    }
 }
 var ActiveImgIndex = ImgList.length > 0 ? 0 : null;
 var CurrentPercentage = 50;
