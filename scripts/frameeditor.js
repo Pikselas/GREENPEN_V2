@@ -1,12 +1,15 @@
 var ImgList = [];
-ImgList = Object.keys(PROJECT_JSON["IMAGES"]);
+if(PROJECT_JSON["IMAGE_FRAMES"].hasOwnProperty(FRAME_ID))
+{
+    ImgList = Object.keys(PROJECT_JSON["IMAGE_FRAMES"][FRAME_ID]["IMAGE_LIST"]);
+}
 var ActiveImgIndex = ImgList.length > 0 ? 0 : null;
 var CurrentPercentage = 50;
 setTimeout(()=>{
     let Mainsec = document.getElementById("MainSection").children[0]
     let SelectorSec = document.getElementById("PreviewSection");
     ImgList.forEach((str,indx)=>{
-        let ImgSource = PROJECT_JSON[str]["path_type"] == "URL" ? PROJECT_JSON[str]["path"] : "///" + PROJECT_JSON[str]["path"];
+        let ImgSource = PROJECT_JSON["IMAGES"][str]["path_type"] == "URL" ? PROJECT_JSON["IMAGES"][str]["path"] : "///" + PROJECT_JSON["IMAGES"][str]["path"];
         let Img = document.createElement("img");
         Img.src = ImgSource;
         let SelectorImg = Img;
