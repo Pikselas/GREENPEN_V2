@@ -1,3 +1,4 @@
 {
-    "greeneditor" : "pages/greeneditor.html"
+    "greeneditor" : "pages/greeneditor.html",
+    "frameeditor" : "pages/frameeditor.html"
 }
