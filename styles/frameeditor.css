@@ -75,6 +75,8 @@ body
     font-size: large;
     background-color: black;
     box-shadow: 0px 0px 10px #414a45;
+    overflow-y: scroll;
+    scrollbar-width:none;
 }
 .PreviewSection div:hover
 {

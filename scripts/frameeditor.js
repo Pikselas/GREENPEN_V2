@@ -1,5 +1,7 @@
 var ImgList = [];
 var FRAME_ID = "";
+var ActiveImgIndex =  null;
+var CurrentPercentage = 50;
 document.body.onload = ()=>{
     let projdtls = GetPathData();
     if(projdtls.hasOwnProperty("frameid"))
@@ -9,10 +11,12 @@ document.body.onload = ()=>{
     if(PROJECT_JSON["IMAGE_FRAMES"].hasOwnProperty(FRAME_ID))
     {
         ImgList = Object.keys(PROJECT_JSON["IMAGE_FRAMES"][FRAME_ID]["IMAGE_LIST"]);
+        if(ImgList.length > 0)
+        {
+            ActiveImgIndex = 0;
+        }
     }
 }
-var ActiveImgIndex = ImgList.length > 0 ? 0 : null;
-var CurrentPercentage = 50;
 setTimeout(()=>{
     let Mainsec = document.getElementById("MainSection").children[0]
     let SelectorSec = document.getElementById("PreviewSection");
@@ -20,9 +24,11 @@ setTimeout(()=>{
         let ImgSource = PROJECT_JSON["IMAGES"][str]["path_type"] == "URL" ? PROJECT_JSON["IMAGES"][str]["path"] : "///" + PROJECT_JSON["IMAGES"][str]["path"];
         let Img = document.createElement("img");
         Img.src = ImgSource;
-        let SelectorImg = Img;
+        let SelectorImg = document.createElement("img");
+        SelectorImg.src = ImgSource;
         let Selector = document.createElement("div");
         Selector.appendChild(SelectorImg);
+        Selector.innerHTML += "<br/>" + ImgSource.split("/").reverse()[0];
         Selector.setAttribute("onclick" , `GoToImg(${indx})`);
         if(indx != 0)
         {
@@ -87,6 +93,7 @@ function HideImage(ImgIndx)
 }
 function GoToImg(ImgIndx)
 {
+
     if(ActiveImgIndex != null)
     {
         HideImage(ActiveImgIndex);
