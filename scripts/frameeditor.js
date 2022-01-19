@@ -101,6 +101,14 @@ function GoToImg(ImgIndx)
         ActiveImgIndex = ImgIndx;
     }
 }
+function NextImage()
+{
+   GoToImg(ActiveImgIndex + 1 == ImgList.length ? 0 : ActiveImgIndex + 1);
+}
+function PrevImage()
+{
+    GoToImg(ActiveImgIndex - 1 == 0 ? ImgList.length - 1 : ActiveImgIndex - 1);
+}
 document.getElementById("ExpandButton").onclick = (ev)=>{
     if(ev.target.parentElement.style.height == "45px")
     {
@@ -120,12 +128,20 @@ document.onkeydown = (e)=>{
     {
         AutoResizeHeight();
     }
-    if(e.key == "a")
+    else if(e.key == "a")
     {
         IncreaseSize();
     }
-    if(e.key == "s")
+    else if(e.key == "s")
     {
         DecreaseSize();
+    }
+    else if(e.key == "ArrowLeft")
+    {
+        PrevImage();
+    }
+    else if(e.key == "ArrowRight")
+    {
+        NextImage();
     }
 }
