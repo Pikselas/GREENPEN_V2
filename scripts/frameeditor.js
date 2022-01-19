@@ -107,7 +107,7 @@ function NextImage()
 }
 function PrevImage()
 {
-    GoToImg(ActiveImgIndex - 1 == 0 ? ImgList.length - 1 : ActiveImgIndex - 1);
+    GoToImg(ActiveImgIndex - 1 == -1 ? ImgList.length - 1 : ActiveImgIndex - 1);
 }
 document.getElementById("ExpandButton").onclick = (ev)=>{
     if(ev.target.parentElement.style.height == "45px")
@@ -143,5 +143,20 @@ document.onkeydown = (e)=>{
     else if(e.key == "ArrowRight")
     {
         NextImage();
+    }
+    else if(e.key == "ArrowDown")
+    {
+        console.log(e);
+        let scroller = document.getElementById("MainSection").children[0];
+        let scrollingBy = 20;
+        let ScrollDest = scroller.scrollTopMax;
+        let itrval = setInterval(()=>{
+            scroller.scrollBy({top:scrollingBy , "behavior" : "smooth"});
+            if(scroller.scrollTop == ScrollDest)
+            {
+                scrollingBy = -scrollingBy;
+                ScrollDest = scroller.scrollTopMax - scroller.scrollTop;
+            }
+        })
     }
 }
