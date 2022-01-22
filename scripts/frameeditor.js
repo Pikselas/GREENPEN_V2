@@ -2,6 +2,9 @@ var ImgList = [];
 var FRAME_ID = "";
 var ActiveImgIndex =  null;
 var CurrentPercentage = 50;
+var ScrollIntervalHandler = null;
+var ScrollByPerCall = 20;
+
 document.body.onload = ()=>{
     let projdtls = GetPathData();
     if(projdtls.hasOwnProperty("frameid"))
@@ -109,18 +112,54 @@ function PrevImage()
 {
     GoToImg(ActiveImgIndex - 1 == -1 ? ImgList.length - 1 : ActiveImgIndex - 1);
 }
+/**
+ * @param {Function} CallableFunc
+ * 
+ */
+function AutoScroll(CallableFunc = null)
+{
+    let scroller = document.getElementById("MainSection").children[0];
+    let ScrollDest = scroller.scrollTopMax;
+    ScrollIntervalHandler = setInterval(()=>{
+        scroller.scrollBy({top:ScrollByPerCall , "behavior" : "smooth"});
+        if(scroller.scrollTop == ScrollDest)
+        {
+            ScrollByPerCall = -ScrollByPerCall;
+            if(CallableFunc != null)
+            {
+                if(scroller.scrollTopMax == 0)
+                {
+                   setTimeout(CallableFunc , 5000);
+                   setTimeout(AutoScroll , 5000 , CallableFunc);
+                   StopAutoScroll();
+                }
+                else
+                {
+                    CallableFunc();
+                }
+            }
+            ScrollDest = scroller.scrollTopMax - scroller.scrollTop;
+        }
+    })
+}
+function StopAutoScroll()
+{
+    clearInterval(ScrollIntervalHandler);
+    ScrollIntervalHandler = null;
+    ScrollByPerCall = ScrollByPerCall < 0 ? -ScrollByPerCall : ScrollByPerCall;
+}
 document.getElementById("ExpandButton").onclick = (ev)=>{
     if(ev.target.parentElement.style.height == "45px")
     {
         ev.target.parentElement.style.height = "95%"
         ev.target.style.transform = "rotate(180deg)";
-        ev.target.parentElement.children[1].hidden = false;
+        document.getElementById("PreviewSection").hidden = false;
     }
     else
     {
         ev.target.parentElement.style.height = "45px";
         ev.target.style.transform = "";
-        ev.target.parentElement.children[1].hidden = true;
+        document.getElementById("PreviewSection").hidden = true;
     }
 };
 document.onkeydown = (e)=>{
@@ -146,17 +185,15 @@ document.onkeydown = (e)=>{
     }
     else if(e.key == "ArrowDown")
     {
-        console.log(e);
+        AutoScroll(()=>{
+            document.getElementById("MainSection").children[0].scrollTop = 0;
+            ScrollByPerCall = ScrollByPerCall < 0 ? -ScrollByPerCall : ScrollByPerCall;
+         NextImage();
+        });
+    }
+    else if(e.key == "ArrowUp")
+    {
         let scroller = document.getElementById("MainSection").children[0];
-        let scrollingBy = 20;
-        let ScrollDest = scroller.scrollTopMax;
-        let itrval = setInterval(()=>{
-            scroller.scrollBy({top:scrollingBy , "behavior" : "smooth"});
-            if(scroller.scrollTop == ScrollDest)
-            {
-                scrollingBy = -scrollingBy;
-                ScrollDest = scroller.scrollTopMax - scroller.scrollTop;
-            }
-        })
+        alert(scroller.scrollTop + " " + scroller.scrollTopMax);
     }
 }
