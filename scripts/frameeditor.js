@@ -116,31 +116,26 @@ function PrevImage()
  * @param {Function} CallableFunc
  * 
  */
-function AutoScroll(CallableFunc = null)
+function AutoScroll(ScrollPass)
 {
     let scroller = document.getElementById("MainSection").children[0];
     let ScrollDest = scroller.scrollTopMax;
-    ScrollIntervalHandler = setInterval(()=>{
-        scroller.scrollBy({top:ScrollByPerCall , "behavior" : "smooth"});
-        if(scroller.scrollTop == ScrollDest)
-        {
-            ScrollByPerCall = -ScrollByPerCall;
-            if(CallableFunc != null)
+    let prms = new Promise((rlv , rej)=>{
+
+        ScrollIntervalHandler = setInterval(()=>{
+            scroller.scrollBy({top:ScrollByPerCall , "behavior" : "smooth"});
+            if(scroller.scrollTop == ScrollDest)
             {
-                if(scroller.scrollTopMax == 0)
+                ScrollByPerCall = -ScrollByPerCall;
+                ScrollDest = scroller.scrollTopMax - scroller.scrollTop;
+                if( --ScrollPass <= 0)
                 {
-                   setTimeout(CallableFunc , 5000);
-                   setTimeout(AutoScroll , 5000 , CallableFunc);
-                   StopAutoScroll();
-                }
-                else
-                {
-                    CallableFunc();
+                    rlv("Ok");
                 }
             }
-            ScrollDest = scroller.scrollTopMax - scroller.scrollTop;
-        }
-    })
+        })
+    });
+    return prms;
 }
 function StopAutoScroll()
 {
@@ -148,52 +143,23 @@ function StopAutoScroll()
     ScrollIntervalHandler = null;
     ScrollByPerCall = ScrollByPerCall < 0 ? -ScrollByPerCall : ScrollByPerCall;
 }
+function ShowInFullScreen()
+{
+    EnterFullScreen(document.getElementById("MainSection"));
+}
 document.getElementById("ExpandButton").onclick = (ev)=>{
-    if(ev.target.parentElement.style.height == "45px")
+    if(ev.target.parentElement.parentElement.style.height == "45px")
     {
-        ev.target.parentElement.style.height = "95%"
+        ev.target.parentElement.parentElement.style.height = "95%"
         ev.target.style.transform = "rotate(180deg)";
         document.getElementById("PreviewSection").hidden = false;
     }
     else
     {
-        ev.target.parentElement.style.height = "45px";
+        ev.target.parentElement.parentElement.style.height = "45px";
         ev.target.style.transform = "";
         document.getElementById("PreviewSection").hidden = true;
     }
 };
 document.onkeydown = (e)=>{
-    if(e.key == "w")
-    {
-        AutoResizeHeight();
-    }
-    else if(e.key == "a")
-    {
-        IncreaseSize();
-    }
-    else if(e.key == "s")
-    {
-        DecreaseSize();
-    }
-    else if(e.key == "ArrowLeft")
-    {
-        PrevImage();
-    }
-    else if(e.key == "ArrowRight")
-    {
-        NextImage();
-    }
-    else if(e.key == "ArrowDown")
-    {
-        AutoScroll(()=>{
-            document.getElementById("MainSection").children[0].scrollTop = 0;
-            ScrollByPerCall = ScrollByPerCall < 0 ? -ScrollByPerCall : ScrollByPerCall;
-         NextImage();
-        });
-    }
-    else if(e.key == "ArrowUp")
-    {
-        let scroller = document.getElementById("MainSection").children[0];
-        alert(scroller.scrollTop + " " + scroller.scrollTopMax);
-    }
 }
