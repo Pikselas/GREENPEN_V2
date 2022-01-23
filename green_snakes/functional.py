@@ -15,4 +15,4 @@ def GenerateJSScriptData(JSONstr , Path):
         if dct["path_type"] != "URL":
             pth =  JSONstr["IMAGES"][key]["path"]
             JSONstr["IMAGES"][key]["path"] = Path + '/' + JSONstr["IMAGES"][key]["path"]
-    return "var PROJECT_JSON = " + dumps(JSONstr)
+    return "var PROJECT_JSON = " + dumps(JSONstr , indent = 2)
