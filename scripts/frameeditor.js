@@ -4,6 +4,7 @@ var ActiveImgIndex =  null;
 var CurrentPercentage = 50;
 var ScrollIntervalHandler = null;
 var ScrollByPerCall = 20;
+var LastScrollPass = 2;
 
 document.body.onload = ()=>{
     let projdtls = GetPathData();
@@ -49,6 +50,11 @@ function ResizeFrame(sizeInPercent)
         let Elm = document.getElementById("MainSection")
         Elm.style.width = String(sizeInPercent) + "%"
         Elm.style.left = String((100 - sizeInPercent) / 2) + "%";
+        if(ScrollIntervalHandler != null)
+        {
+            StopAutoScroll();
+            AutoScroll(LastScrollPass);
+        }
     }
 }
 function AutoResizeHeight()
@@ -65,7 +71,11 @@ function AutoResizeHeight()
         {
             Elm.style.height = "100%";
         }
-
+        if(ScrollIntervalHandler != null)
+        {
+            StopAutoScroll();
+            setTimeout(AutoScroll,500 , LastScrollPass);
+        }
     }
 }
 function IncreaseSize()
@@ -96,21 +106,31 @@ function HideImage(ImgIndx)
 }
 function GoToImg(ImgIndx)
 {
-
     if(ActiveImgIndex != null)
     {
         HideImage(ActiveImgIndex);
         ShowImage(ImgIndx);
         ActiveImgIndex = ImgIndx;
+        document.getElementById("MainSection").children[0].scrollTo({top : 0});
     }
 }
 function NextImage()
 {
    GoToImg(ActiveImgIndex + 1 == ImgList.length ? 0 : ActiveImgIndex + 1);
+   if(ScrollIntervalHandler != null)
+   {
+       StopAutoScroll();
+       AutoScroll(LastScrollPass);
+   }
 }
 function PrevImage()
 {
     GoToImg(ActiveImgIndex - 1 == -1 ? ImgList.length - 1 : ActiveImgIndex - 1);
+    if(ScrollIntervalHandler != null)
+    {
+        StopAutoScroll();
+        AutoScroll(LastScrollPass);
+    }
 }
 /**
  * @param {Function} CallableFunc
@@ -118,6 +138,7 @@ function PrevImage()
  */
 function AutoScroll(ScrollPass)
 {
+    LastScrollPass = ScrollPass;
     let scroller = document.getElementById("MainSection").children[0];
     let ScrollDest = scroller.scrollTopMax;
     let prms = new Promise((rlv , rej)=>{
@@ -162,4 +183,29 @@ document.getElementById("ExpandButton").onclick = (ev)=>{
     }
 };
 document.onkeydown = (e)=>{
+    switch(e.key)
+    {
+        case "ArrowLeft":
+            PrevImage();
+            break;
+        case "ArrowRight":
+            NextImage();
+            break;
+        case "ArrowDown":
+            AutoScroll(2);
+            break;
+        case "w":
+        case "W":
+            IncreaseSize();
+            break;
+        case "s":
+        case "S":
+            DecreaseSize();
+            break;
+        case "a":
+        case "A":
+            AutoResizeHeight();
+            break;
+    }
+
 }
