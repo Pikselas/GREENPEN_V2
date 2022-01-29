@@ -45,6 +45,7 @@ body
 }
 .MainSection div img
 {
+    position: absolute;
     width: 100%;
 }
 .PreviewSection
