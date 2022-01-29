@@ -53,7 +53,7 @@ function ResizeFrame(sizeInPercent)
         if(ScrollIntervalHandler != null)
         {
             StopAutoScroll();
-            AutoScroll(LastScrollPass);
+            //AutoScroll(LastScrollPass);
         }
     }
 }
@@ -113,24 +113,19 @@ function GoToImg(ImgIndx)
         ActiveImgIndex = ImgIndx;
         document.getElementById("MainSection").children[0].scrollTo({top : 0});
     }
-}
-function NextImage()
-{
-   GoToImg(ActiveImgIndex + 1 == ImgList.length ? 0 : ActiveImgIndex + 1);
-   if(ScrollIntervalHandler != null)
+    if(ScrollIntervalHandler != null)
    {
        StopAutoScroll();
        AutoScroll(LastScrollPass);
    }
 }
+function NextImage()
+{
+   GoToImg(ActiveImgIndex + 1 == ImgList.length ? 0 : ActiveImgIndex + 1);
+}
 function PrevImage()
 {
     GoToImg(ActiveImgIndex - 1 == -1 ? ImgList.length - 1 : ActiveImgIndex - 1);
-    if(ScrollIntervalHandler != null)
-    {
-        StopAutoScroll();
-        AutoScroll(LastScrollPass);
-    }
 }
 /**
  * @param {Function} CallableFunc
