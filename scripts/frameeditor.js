@@ -5,6 +5,7 @@ var CurrentPercentage = 50;
 var ScrollIntervalHandler = null;
 var ScrollByPerCall = 20;
 var LastScrollPass = 2;
+var LastScrollDuration = 100;
 
 document.body.onload = ()=>{
     let projdtls = GetPathData();
@@ -131,15 +132,18 @@ function PrevImage()
  * @param {Function} CallableFunc
  * 
  */
-function AutoScroll(ScrollPass)
+function AutoScroll(ScrollPass , CompleteIn = 100)
 {
     LastScrollPass = ScrollPass;
     let scroller = document.getElementById("MainSection").children[0];
     let ScrollDest = scroller.scrollTopMax;
+    ScrollByPerCall = Math.round(scroller.scrollTopMax / CompleteIn);
+    if(ScrollByPerCall <= 0 && scroller.scrollTopMax != 0 )
+    {
+        ScrollByPerCall = 1;
+    } 
     let prms = new Promise((rlv , rej)=>{
-
         ScrollIntervalHandler = setInterval(()=>{
-            scroller.scrollBy({top:ScrollByPerCall , "behavior" : "smooth"});
             if(scroller.scrollTop == ScrollDest)
             {
                 ScrollByPerCall = -ScrollByPerCall;
@@ -149,7 +153,8 @@ function AutoScroll(ScrollPass)
                     rlv("Ok");
                 }
             }
-        })
+            scroller.scrollBy({top:ScrollByPerCall});
+        } , 1);
     });
     return prms;
 }
@@ -200,6 +205,9 @@ document.onkeydown = (e)=>{
         case "a":
         case "A":
             AutoResizeHeight();
+            break;
+        case "f":
+            ShowInFullScreen();
             break;
     }
 
