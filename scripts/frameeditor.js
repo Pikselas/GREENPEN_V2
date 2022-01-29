@@ -3,6 +3,7 @@ var FRAME_ID = "";
 var ActiveImgIndex =  null;
 var CurrentPercentage = 50;
 var ScrollIntervalHandler = null;
+var SlideShowHandler = null;
 var ScrollByPerCall = 20;
 var LastScrollPass = 2;
 var LastScrollDuration = 100;
@@ -54,7 +55,7 @@ function ResizeFrame(sizeInPercent)
         if(ScrollIntervalHandler != null)
         {
             StopAutoScroll();
-            //AutoScroll(LastScrollPass);
+            AutoScroll(LastScrollPass , LastScrollDuration);
         }
     }
 }
@@ -129,20 +130,24 @@ function PrevImage()
     GoToImg(ActiveImgIndex - 1 == -1 ? ImgList.length - 1 : ActiveImgIndex - 1);
 }
 /**
- * @param {Function} CallableFunc
+ * @param {number} ScrollPass
+ * @param {number} CompleteIn 
  * 
  */
 function AutoScroll(ScrollPass , CompleteIn = 100)
 {
     LastScrollPass = ScrollPass;
+    LastScrollDuration = CompleteIn;
     let scroller = document.getElementById("MainSection").children[0];
     let ScrollDest = scroller.scrollTopMax;
+    CompleteIn /= ScrollPass;
     ScrollByPerCall = Math.round(scroller.scrollTopMax / CompleteIn);
     if(ScrollByPerCall <= 0 && scroller.scrollTopMax != 0 )
     {
         ScrollByPerCall = 1;
     } 
     let prms = new Promise((rlv , rej)=>{
+        let CompleteTime = 0;
         ScrollIntervalHandler = setInterval(()=>{
             if(scroller.scrollTop == ScrollDest)
             {
@@ -150,10 +155,11 @@ function AutoScroll(ScrollPass , CompleteIn = 100)
                 ScrollDest = scroller.scrollTopMax - scroller.scrollTop;
                 if( --ScrollPass <= 0)
                 {
-                    rlv("Ok");
+                    rlv(CompleteTime);
                 }
             }
             scroller.scrollBy({top:ScrollByPerCall});
+            CompleteTime++;
         } , 1);
     });
     return prms;
@@ -167,6 +173,39 @@ function StopAutoScroll()
 function ShowInFullScreen()
 {
     EnterFullScreen(document.getElementById("MainSection"));
+}
+function SlideShow(callFunction , autoScroll , time_interval , ScrollPass = 1)
+{
+    if(!autoScroll)
+    {
+       SlideShowHandler = setInterval(callFunction , time_interval);    
+    }
+    else
+    {
+        StopAutoScroll();
+        let RecursiveCaller = ()=>{
+            AutoScroll(ScrollPass , time_interval).then((rlv)=>{
+                StopAutoScroll();
+                if(rlv < time_interval)
+                {
+                    setTimeout(()=>{
+                    callFunction();
+                    RecursiveCaller();
+                    } , time_interval - rlv);
+                }
+                else
+                {
+                    callFunction();
+                    RecursiveCaller();
+                }
+            });
+        };
+        RecursiveCaller();
+    }
+}
+function StopSlideShow()
+{
+   
 }
 document.getElementById("ExpandButton").onclick = (ev)=>{
     if(ev.target.parentElement.parentElement.style.height == "45px")
