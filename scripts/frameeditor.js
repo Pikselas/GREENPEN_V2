@@ -3,10 +3,18 @@ var FRAME_ID = "";
 var ActiveImgIndex =  null;
 var CurrentPercentage = 50;
 var ScrollIntervalHandler = null;
-var SlideShowHandler = null;
 var ScrollByPerCall = 20;
 var LastScrollPass = 2;
 var LastScrollDuration = 100;
+
+var SlideShowHandler = null;
+
+var SlideShowActive = false;
+
+var SlideShowScroll = false;
+var SlideShowInterval = 1000;
+var SlideShowNextActive = false;
+var SlideShowPrevActive = false;
 
 document.body.onload = ()=>{
     let projdtls = GetPathData();
@@ -176,36 +184,51 @@ function ShowInFullScreen()
 }
 function SlideShow(callFunction , autoScroll , time_interval , ScrollPass = 1)
 {
+    SlideShowActive = true;
     if(!autoScroll)
     {
-       SlideShowHandler = setInterval(callFunction , time_interval);    
+        SlideShowHandler = setInterval(() => {
+          callFunction();
+          if(!SlideShowActive)
+          {
+              clearInterval(SlideShowHandler);
+          }
+        } , time_interval);  
     }
     else
     {
         StopAutoScroll();
         let RecursiveCaller = ()=>{
-            AutoScroll(ScrollPass , time_interval).then((rlv)=>{
-                StopAutoScroll();
-                if(rlv < time_interval)
-                {
-                    setTimeout(()=>{
-                    callFunction();
-                    RecursiveCaller();
-                    } , time_interval - rlv);
-                }
-                else
-                {
-                    callFunction();
-                    RecursiveCaller();
-                }
-            });
+            if(SlideShowActive)
+            {
+                AutoScroll(ScrollPass , time_interval).then((rlv)=>{
+                    StopAutoScroll();
+                    if(rlv < time_interval)
+                    {
+                        setTimeout(()=>{
+                        callFunction();
+                        RecursiveCaller();
+                        } , time_interval - rlv);
+                    }
+                    else
+                    {
+                        callFunction();
+                        RecursiveCaller();
+                    }
+                });
+         }
         };
         RecursiveCaller();
     }
 }
 function StopSlideShow()
 {
-   
+   SlideShowActive = false;
+
+   //this is necessary for cases where 
+   //We call AutoScroll again before previous 
+   //interval completed so the the flag becomes true
+   clearInterval(SlideShowHandler);
 }
 document.getElementById("ExpandButton").onclick = (ev)=>{
     if(ev.target.parentElement.parentElement.style.height == "45px")
@@ -221,6 +244,51 @@ document.getElementById("ExpandButton").onclick = (ev)=>{
         document.getElementById("PreviewSection").hidden = true;
     }
 };
+
+document.getElementById("SlideShowPrev").onclick = (ev)=>{
+    if(SlideShowPrevActive)
+    {
+        ev.target.innerHTML = "<";
+        SlideShowPrevActive = false;
+        StopSlideShow();
+    }
+    else
+    {
+        if(SlideShowNextActive)
+        {
+            StopSlideShow();
+            document.getElementById("SlideShowNext").innerHTML = ">";
+            SlideShowNextActive = false;
+        }
+        SlideShowPrevActive = true;
+        ev.target.innerHTML = "||";
+        SlideShow(PrevImage , SlideShowScroll , SlideShowInterval);
+    }
+};
+
+document.getElementById("SlideShowNext").onclick = (ev) => {
+
+    if(SlideShowNextActive)
+    {
+        ev.target.innerHTML = ">";
+        SlideShowNextActive = false;
+        StopSlideShow();
+    }
+    else
+    {
+        if(SlideShowPrevActive)
+        {
+            StopSlideShow();
+            document.getElementById("SlideShowPrev").innerHTML = "<";
+            SlideShowPrevActive = false;
+        }
+        SlideShowNextActive = true;
+        ev.target.innerHTML = "||";
+        SlideShow(NextImage , SlideShowScroll , SlideShowInterval);
+    }
+
+};
+
 document.onkeydown = (e)=>{
     switch(e.key)
     {
