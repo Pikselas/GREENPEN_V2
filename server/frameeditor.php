@@ -12,11 +12,11 @@
                 $res= $res->fetch_assoc()["AUTHORID"];
                 $Result["def_path"] = GP_USER_RESOURCE_ALIAS .'/'.$res.'/'.$_GET["code"];
 
-                $ProjectData = json_decode(file_get_contents($Result["def_path"] . '/' . "GP_SCRIPT.json"),true);
+                $ProjectData = json_decode(file_get_contents(GP_USER_RESOURCE_PATH . '/'.$res.'/'.$_GET["code"] . '/' . "GP_SCRIPT.json"),true);
                 if(isset($ProjectData["IMAGE_FRAMES"][$_GET["frameid"]]))
                 {
                     $Result["success"] = true;
-                    foreach($ProjectData["IMAGE_FRAMES"][$_GET["frameid"]]["IMAGE_LIST"] as $ImgID)
+                    foreach($ProjectData["IMAGE_FRAMES"][$_GET["frameid"]]["IMAGE_LIST"] as $ImgID => $valu)
                     {
                         $Result[$ImgID] = $ProjectData["IMAGES"][$ImgID];
                     }
@@ -32,7 +32,10 @@
             }
         }
     }
-    $Result["error"] = "database error";
+    else
+    {
+     $Result["error"] = "database error";
+    }
   }
   else
   {

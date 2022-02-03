@@ -260,7 +260,7 @@ function CreateImageSection(ID,width = null,height = null , Left , Top)
     PanelOpenButton.innerHTML = ":-:";
     PanelOpenButton.className = "ImageFrameOpenButton";
     PanelOpenButton.onclick = (ev)=>{
-            window.open("frameeditor.html?frameid=" + ev.target.parentElement.id);
+            window.open(`frameeditor.html?frameid=${ev.target.parentElement.id}&&code=${GetPathData()["code"]}`);
     };
 
     MainPanel.appendChild(PanelOpenButton);

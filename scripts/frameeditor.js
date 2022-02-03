@@ -1,5 +1,6 @@
 var PROJECT_JSON = {};
 var ImgList = [];
+var DefPath = "";
 var FRAME_ID = "";
 var ActiveImgIndex =  null;
 var CurrentPercentage = 50;
@@ -20,40 +21,52 @@ document.body.onload = ()=>{
     {
         FRAME_ID = projdtls["frameid"];
         PerformAjaxRequest("GET",{} , `../server/frameeditor.php?code=${projdtls["code"]}&&frameid=${projdtls["frameid"]}`,"",true,(res)=>{
-            console.log(res);
+            res = JSON.parse(res);
+            if(res["success"])
+            {
+                DefPath = res["def_path"];
+                delete res["success"];
+                delete res["error"];
+                delete res["def_path"];
+                ImgList = Object.keys(res);
+                PROJECT_JSON = {
+                    IMAGES : res
+                };
+
+                if(ImgList.length > 0)
+                {
+                    ActiveImgIndex = 0;
+                }
+
+                let Mainsec = document.getElementById("MainSection").children[0]
+                let SelectorSec = document.getElementById("PreviewSection");
+                ImgList.forEach((str,indx)=>{
+                let ImgSource = PROJECT_JSON["IMAGES"][str]["path_type"] == "URL" ? PROJECT_JSON["IMAGES"][str]["path"] : DefPath + '/' + PROJECT_JSON["IMAGES"][str]["path"];
+                let Img = document.createElement("img");
+                Img.src = ImgSource;
+                let SelectorImg = document.createElement("img");
+                SelectorImg.src = ImgSource;
+                let Selector = document.createElement("div");
+                Selector.appendChild(SelectorImg);
+                Selector.innerHTML += "<br/>" + ImgSource.split("/").reverse()[0];
+                Selector.setAttribute("onclick" , `GoToImg(${indx})`);
+                if(indx != 0)
+                {
+                    Img.hidden = true;
+                } 
+                SelectorSec.appendChild(Selector);
+                Img.id = str;
+                Mainsec.appendChild(Img);           
+    });
+
+            }
+            else
+            {
+                alert(res["error"]);
+            }
         });
     }
-    // if(PROJECT_JSON["IMAGE_FRAMES"].hasOwnProperty(FRAME_ID))
-    // {
-    //     ImgList = Object.keys(PROJECT_JSON["IMAGE_FRAMES"][FRAME_ID]["IMAGE_LIST"]);
-    //     if(ImgList.length > 0)
-    //     {
-    //         ActiveImgIndex = 0;
-    //     }
-    // }
 }
-setTimeout(()=>{
-    let Mainsec = document.getElementById("MainSection").children[0]
-    let SelectorSec = document.getElementById("PreviewSection");
-    ImgList.forEach((str,indx)=>{
-        let ImgSource = PROJECT_JSON["IMAGES"][str]["path_type"] == "URL" ? PROJECT_JSON["IMAGES"][str]["path"] : "///" + PROJECT_JSON["IMAGES"][str]["path"];
-        let Img = document.createElement("img");
-        Img.src = ImgSource;
-        let SelectorImg = document.createElement("img");
-        SelectorImg.src = ImgSource;
-        let Selector = document.createElement("div");
-        Selector.appendChild(SelectorImg);
-        Selector.innerHTML += "<br/>" + ImgSource.split("/").reverse()[0];
-        Selector.setAttribute("onclick" , `GoToImg(${indx})`);
-        if(indx != 0)
-        {
-            Img.hidden = true;
-        } 
-        SelectorSec.appendChild(Selector);
-        Img.id = str;
-        Mainsec.appendChild(Img);           
-    });
-},1);
 function ResizeFrame(sizeInPercent)
 {
     if(sizeInPercent <= 100 && sizeInPercent >= 0)
