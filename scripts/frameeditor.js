@@ -1,3 +1,4 @@
+var PROJECT_JSON = {};
 var ImgList = [];
 var FRAME_ID = "";
 var ActiveImgIndex =  null;
@@ -15,18 +16,21 @@ var SlideShowPrevActive = false;
 
 document.body.onload = ()=>{
     let projdtls = GetPathData();
-    if(projdtls.hasOwnProperty("frameid"))
+    if(projdtls.hasOwnProperty("frameid") && projdtls.hasOwnProperty("code"))
     {
         FRAME_ID = projdtls["frameid"];
+        PerformAjaxRequest("GET",{} , `../server/frameeditor.php?code=${projdtls["code"]}&&frameid=${projdtls["frameid"]}`,"",true,(res)=>{
+            console.log(res);
+        });
     }
-    if(PROJECT_JSON["IMAGE_FRAMES"].hasOwnProperty(FRAME_ID))
-    {
-        ImgList = Object.keys(PROJECT_JSON["IMAGE_FRAMES"][FRAME_ID]["IMAGE_LIST"]);
-        if(ImgList.length > 0)
-        {
-            ActiveImgIndex = 0;
-        }
-    }
+    // if(PROJECT_JSON["IMAGE_FRAMES"].hasOwnProperty(FRAME_ID))
+    // {
+    //     ImgList = Object.keys(PROJECT_JSON["IMAGE_FRAMES"][FRAME_ID]["IMAGE_LIST"]);
+    //     if(ImgList.length > 0)
+    //     {
+    //         ActiveImgIndex = 0;
+    //     }
+    // }
 }
 setTimeout(()=>{
     let Mainsec = document.getElementById("MainSection").children[0]
