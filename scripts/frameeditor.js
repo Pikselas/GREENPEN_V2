@@ -1,58 +1,72 @@
+var PROJECT_JSON = {};
 var ImgList = [];
+var DefPath = "";
 var FRAME_ID = "";
 var ActiveImgIndex =  null;
 var CurrentPercentage = 50;
 var ScrollIntervalHandler = null;
-var ScrollByPerCall = 20;
-var LastScrollPass = 2;
-var LastScrollDuration = 100;
 
 var SlideShowHandler = null;
 
 var SlideShowActive = false;
 
-var SlideShowScroll = false;
+var SlideShowScroll = true;
 var SlideShowInterval = 1000;
 var SlideShowNextActive = false;
 var SlideShowPrevActive = false;
 
 document.body.onload = ()=>{
     let projdtls = GetPathData();
-    if(projdtls.hasOwnProperty("frameid"))
+    if(projdtls.hasOwnProperty("frameid") && projdtls.hasOwnProperty("code"))
     {
         FRAME_ID = projdtls["frameid"];
-    }
-    if(PROJECT_JSON["IMAGE_FRAMES"].hasOwnProperty(FRAME_ID))
-    {
-        ImgList = Object.keys(PROJECT_JSON["IMAGE_FRAMES"][FRAME_ID]["IMAGE_LIST"]);
-        if(ImgList.length > 0)
-        {
-            ActiveImgIndex = 0;
-        }
+        PerformAjaxRequest("GET",{} , `../server/frameeditor.php?code=${projdtls["code"]}&&frameid=${projdtls["frameid"]}`,"",true,(res)=>{
+            res = JSON.parse(res);
+            if(res["success"])
+            {
+                DefPath = res["def_path"];
+                delete res["success"];
+                delete res["error"];
+                delete res["def_path"];
+                ImgList = Object.keys(res);
+                PROJECT_JSON = {
+                    IMAGES : res
+                };
+
+                if(ImgList.length > 0)
+                {
+                    ActiveImgIndex = 0;
+                }
+
+                let Mainsec = document.getElementById("MainSection").children[0]
+                let SelectorSec = document.getElementById("PreviewSection");
+                ImgList.forEach((str,indx)=>{
+                let ImgSource = PROJECT_JSON["IMAGES"][str]["path_type"] == "URL" ? PROJECT_JSON["IMAGES"][str]["path"] : DefPath + '/' + PROJECT_JSON["IMAGES"][str]["path"];
+                let Img = document.createElement("img");
+                Img.src = ImgSource;
+                let SelectorImg = document.createElement("img");
+                SelectorImg.src = ImgSource;
+                let Selector = document.createElement("div");
+                Selector.appendChild(SelectorImg);
+                Selector.innerHTML += "<br/>" + ImgSource.split("/").reverse()[0];
+                Selector.setAttribute("onclick" , `GoToImg(${indx})`);
+                if(indx != 0)
+                {
+                    Img.hidden = true;
+                } 
+                SelectorSec.appendChild(Selector);
+                Img.id = str;
+                Mainsec.appendChild(Img);           
+    });
+
+            }
+            else
+            {
+                alert(res["error"]);
+            }
+        });
     }
 }
-setTimeout(()=>{
-    let Mainsec = document.getElementById("MainSection").children[0]
-    let SelectorSec = document.getElementById("PreviewSection");
-    ImgList.forEach((str,indx)=>{
-        let ImgSource = PROJECT_JSON["IMAGES"][str]["path_type"] == "URL" ? PROJECT_JSON["IMAGES"][str]["path"] : "///" + PROJECT_JSON["IMAGES"][str]["path"];
-        let Img = document.createElement("img");
-        Img.src = ImgSource;
-        let SelectorImg = document.createElement("img");
-        SelectorImg.src = ImgSource;
-        let Selector = document.createElement("div");
-        Selector.appendChild(SelectorImg);
-        Selector.innerHTML += "<br/>" + ImgSource.split("/").reverse()[0];
-        Selector.setAttribute("onclick" , `GoToImg(${indx})`);
-        if(indx != 0)
-        {
-            Img.hidden = true;
-        } 
-        SelectorSec.appendChild(Selector);
-        Img.id = str;
-        Mainsec.appendChild(Img);           
-    });
-},1);
 function ResizeFrame(sizeInPercent)
 {
     if(sizeInPercent <= 100 && sizeInPercent >= 0)
@@ -60,11 +74,6 @@ function ResizeFrame(sizeInPercent)
         let Elm = document.getElementById("MainSection")
         Elm.style.width = String(sizeInPercent) + "%"
         Elm.style.left = String((100 - sizeInPercent) / 2) + "%";
-        if(ScrollIntervalHandler != null)
-        {
-            StopAutoScroll();
-            AutoScroll(LastScrollPass , LastScrollDuration);
-        }
     }
 }
 function AutoResizeHeight()
@@ -80,11 +89,6 @@ function AutoResizeHeight()
         else if(Elm.offsetHeight < document.documentElement.scrollHeight)
         {
             Elm.style.height = "100%";
-        }
-        if(ScrollIntervalHandler != null)
-        {
-            StopAutoScroll();
-            setTimeout(AutoScroll,500 , LastScrollPass);
         }
     }
 }
@@ -123,11 +127,6 @@ function GoToImg(ImgIndx)
         ActiveImgIndex = ImgIndx;
         document.getElementById("MainSection").children[0].scrollTo({top : 0});
     }
-    if(ScrollIntervalHandler != null)
-   {
-       StopAutoScroll();
-       AutoScroll(LastScrollPass);
-   }
 }
 function NextImage()
 {
@@ -144,31 +143,34 @@ function PrevImage()
  */
 function AutoScroll(ScrollPass , CompleteIn = 100)
 {
-    LastScrollPass = ScrollPass;
-    LastScrollDuration = CompleteIn;
     let scroller = document.getElementById("MainSection").children[0];
-    let ScrollDest = scroller.scrollTopMax;
-    CompleteIn /= ScrollPass;
-    ScrollByPerCall = Math.round(scroller.scrollTopMax / CompleteIn);
+    let SegmentScrollInterval = 1             // Scrolling to the next segment will be done after this ms
+    CompleteIn /= ScrollPass;                // divides the time if we have to scroll "ScrollPass" times in given time for per pass calculation 
+    let ScrollByPerCall = Math.round(scroller.scrollTopMax * SegmentScrollInterval / CompleteIn);       //calculates segmentSize 
     if(ScrollByPerCall <= 0 && scroller.scrollTopMax != 0 )
     {
-        ScrollByPerCall = 1;
+        ScrollByPerCall = 1;                      //scroll if segment size is 0 but Scroll size is not 0
     } 
     let prms = new Promise((rlv , rej)=>{
         let CompleteTime = 0;
+
+        let LastPos = scroller.scrollTop;
+
         ScrollIntervalHandler = setInterval(()=>{
-            if(scroller.scrollTop == ScrollDest)
+            scroller.scrollBy({top:ScrollByPerCall}) 
+            if(LastPos == scroller.scrollTop)
             {
                 ScrollByPerCall = -ScrollByPerCall;
-                ScrollDest = scroller.scrollTopMax - scroller.scrollTop;
+                ScrollDest = scroller.scrollTop;
                 if( --ScrollPass <= 0)
                 {
                     rlv(CompleteTime);
                 }
             }
-            scroller.scrollBy({top:ScrollByPerCall});
-            CompleteTime++;
-        } , 1);
+            //console.log(ScrollDest , scroller.scrollTop , ScrollByPerCall , CompleteIn , CompleteTime);
+            CompleteTime += SegmentScrollInterval;
+            LastPos = scroller.scrollTop;
+        } , SegmentScrollInterval);
     });
     return prms;
 }
@@ -176,7 +178,6 @@ function StopAutoScroll()
 {
     clearInterval(ScrollIntervalHandler);
     ScrollIntervalHandler = null;
-    ScrollByPerCall = ScrollByPerCall < 0 ? -ScrollByPerCall : ScrollByPerCall;
 }
 function ShowInFullScreen()
 {

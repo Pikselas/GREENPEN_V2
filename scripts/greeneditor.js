@@ -4,6 +4,8 @@ var NewAdd = {"FOLDERS" : {}};
 var Deleted = {"FOLDERS" : [] , "FILES" : []};
 var Changes = {} ; // { ID1 : {"source" : "","dest":"" },ID2 : {"source" : "","dest":"" }}
 var TempFileS = {}; // {ID : {blob : "",dest : "real_path"}}
+
+var ImgSubPanelIndx = 3;
 window.addEventListener("dragover",function(e){
     e = e || event;
     e.preventDefault();
@@ -85,7 +87,7 @@ function SetUpFrames(FrameID)
         Img.ondragstart = (ev)=>{
             ev.dataTransfer.setData("ChildID",Img.id);
         }
-        Frame.children[2].appendChild(Img);
+        Frame.children[ImgSubPanelIndx].appendChild(Img);
     });
     Area.appendChild(Frame);
 }
@@ -118,7 +120,7 @@ function GetAddPanel()
             Img.ondragstart = (ev)=>{
                 ev.dataTransfer.setData("ChildID",Img.id);
             }
-            AddPanel.parentElement.children[2].appendChild(Img);
+            AddPanel.parentElement.children[ImgSubPanelIndx].appendChild(Img);
             PROJECT_JSON["MAGES"][Img.id] = {"path" : Img.src , "path_type" : "URL"};
         }
     }
@@ -139,7 +141,7 @@ function GetAddPanel()
                     Img.ondragstart = (ev)=>{
                         ev.dataTransfer.setData("ChildID",Img.id);
                     }
-                    ev.target.parentElement.children[2].appendChild(Img);
+                    ev.target.parentElement.children[ImgSubPanelIndx].appendChild(Img);
                     let Obj = {};
                     Obj["path"] = ev.target.parentElement.id + '/' + FileList.files[i].name;
                     Obj["path_type"] = "LOCAL";
@@ -160,7 +162,7 @@ function GetAddPanel()
         delete PROJECT_JSON["IMAGE_FRAMES"][TempChild.parentElement.parentElement.id]["IMAGE_LIST"][TempChild.id];
         PROJECT_JSON["IMAGE_FRAMES"][ev.target.parentElement.id]["IMAGE_LIST"][TempChild.id] = "";
         TempChild.parentElement.removeChild(TempChild);
-        ev.target.parentElement.children[2].appendChild(TempChild)
+        ev.target.parentElement.children[ImgSubPanelIndx].appendChild(TempChild)
         if(PROJECT_JSON["IMAGES"][TempChild.id]["path_type"] != "URL")
         {
             let NewPath = ev.target.parentElement.id + '/' + PROJECT_JSON["IMAGES"][TempChild.id]["path"].split('/').reverse()[0];
@@ -231,6 +233,7 @@ function CreateImageSection(ID,width = null,height = null , Left , Top)
 
     let PanelCloseButton = document.createElement("button");
     let PanelAddButton = document.createElement("button");
+    let PanelOpenButton = document.createElement("button");
 
     PanelCloseButton.innerHTML = "x";
     PanelCloseButton.className = "ImageFrameCloseButton";
@@ -243,7 +246,7 @@ function CreateImageSection(ID,width = null,height = null , Left , Top)
     PanelAddButton.innerHTML = "+";
     //when the plus button will be clicked the add panel will be appeared
     PanelAddButton.onclick = (ev)=>{
-        let panel = ev.target.parentElement.children[3];
+        let panel = ev.target.parentElement.children[ImgSubPanelIndx + 1];
         if(panel.style.display == "none")
         {
             panel.style.display = "flex";
@@ -253,6 +256,14 @@ function CreateImageSection(ID,width = null,height = null , Left , Top)
             panel.style.display = "none";
         }
     }
+
+    PanelOpenButton.innerHTML = ":-:";
+    PanelOpenButton.className = "ImageFrameOpenButton";
+    PanelOpenButton.onclick = (ev)=>{
+            window.open(`frameeditor.html?frameid=${ev.target.parentElement.id}&&code=${GetPathData()["code"]}`);
+    };
+
+    MainPanel.appendChild(PanelOpenButton);
     MainPanel.appendChild(PanelAddButton);
     MainPanel.appendChild(PanelCloseButton);
 
