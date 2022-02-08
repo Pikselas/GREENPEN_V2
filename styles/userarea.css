@@ -12,6 +12,7 @@ body
     border-radius: 10px;
     background-color: #1a143be6;
     text-align: center;
+    scrollbar-width: thin;
 }
 .UserFunction
 {
@@ -96,8 +97,8 @@ body
 .ProjectPanel
 {
     position:relative;
-    width: 40%;
-    height: 55%;
+    width: 350px;
+    height: 350px;
     padding: 5px;
     /* margin-top: 2%;
     margin-left: 2%; */
