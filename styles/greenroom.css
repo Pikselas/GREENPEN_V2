@@ -59,6 +59,48 @@ body
     color: rgb(255, 255, 255);
     font-weight: 700;
 }
+#ProjectDtls p
+{
+    position: relative;
+    width: 475px;
+    height: 170px;
+    border: 2px double rgb(4, 216, 117);
+    left: 10px;
+    border-radius: 10px;
+    text-align: center;
+
+}
+#ProjectDtls p b
+{
+    position: absolute;
+    color: white;
+    padding: 5px;
+    top: -15px;
+    left: 15px;
+    background-color: rgb(90, 44, 143);
+    border-radius: 5px;
+}
+#ProjectDtls p span
+{
+    transition: all .1s;
+    font-size: large;
+    font-weight: 800;
+    font-family: monospace;
+    background-color: rgba(6, 202, 111, 0.87);
+    color: rgba(255, 255, 255, 0.808);
+    padding:10px;
+    border-radius: 5px;
+    margin: 1px;
+    margin-bottom: 5px;
+    display: inline-block;
+    box-shadow: 0px 0px 5px rgba(17, 17, 17, 0.747);
+    cursor: pointer;
+}
+#ProjectDtls p span:hover 
+{
+    background-color: rgba(6, 202, 111, 0.753);
+    color: rgba(255, 255, 255, 0.911);
+}
 #ProjectAction
 {
     position: absolute;

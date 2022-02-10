@@ -7,24 +7,24 @@ document.body.onload = ()=>{
             response = JSON.parse(response);
             if(response["success"])
             {
+                ProjectCode =  PathData["code"];
                 document.getElementById("ProjectLgT").children[0].src = response["POSTER"];
                 document.getElementById("ProjectLgT").children[1].innerHTML = response["NAME"];
-                ProjectCode = response["CODE"];
-                delete response["success"];
-                delete response["POSTER"];
-                let dtlsArea = document.getElementById("ProjectDtls");
-                let Table = document.createElement("table");
-                let AuthorRow = document.createElement("tr");
-                AuthorRow.innerHTML = `<td>AUTHOR-ID</td><td>${response["AUTHORID"]}</td>`;
-                let LastUpdateRow = document.createElement("tr");
-                LastUpdateRow.innerHTML = `<td>LAST-UPDATED</td>${response["UPDATED"]}<td></td>`;
-                let ProjectCodeRow = document.createElement("tr");
-                ProjectCodeRow.innerHTML = `<td>PROJECT-CODE</td>${response["CODE"]}<td></td>`
-                Table.appendChild(AuthorRow);
-                Table.appendChild(LastUpdateRow);
-                Table.appendChild(ProjectCodeRow)
-                dtlsArea.appendChild(Table);
-                console.log(response);
+                document.getElementById("AuthorID").innerHTML = response["AUTHORID"];
+                document.getElementById("LastUpdateID").innerHTML = response["UPDATED"];
+                document.getElementById("CodeID").innerHTML = PathData["code"];
+                let TagSec = document.getElementById("TagArea");
+                response["TAGS"].forEach((val)=>{
+                    let Tag = document.createElement("span");
+                    Tag.innerHTML = val;
+                    TagSec.appendChild(Tag);
+                });
+                let AddTag = document.createElement("span");
+                AddTag.innerHTML = "+";
+                AddTag.style.fontSize = "large";
+                AddTag.style.fontWeight = "900";
+                AddTag.style.backgroundColor = "rgba(254, 77, 77, 0.87)"
+                TagSec.appendChild(AddTag);
             }
         });
     }
