@@ -52,6 +52,65 @@ include "../references/php/defines.php";
                     echo "[]";
                 }
             break;
+        case "SEARCH":
+            if(isset($_GET["query"]))
+            {
+                $SQL = "";
+                if(strpos($_GET["query"] , ";"))
+                {
+                    /*
+                      queries like -> "TAG : bmw , bike ; NAME : car , ktm"
+                                    comma -> projects that contains all the comma seperated tags/names
+                                    semicolons -> Intersects all the tables
+                    */
+                    $qr_ar = explode(';' , $_GET["query"]);
+                    $SQL = "SELECT GREEN_PROJECTS.CODE , NAME , POSTER FROM GREEN_PROJECTS";
+                    foreach($qr_ar as $part)
+                    {
+                        if($colPos = strpos($part , ':'))
+                        {
+                         $srType = strtoupper(trim(substr($part , 0 , $colPos)));
+                         $elmlist = explode(',' , substr($part , $colPos + 1));
+                         switch($srType)
+                         {
+                             case "TAG":
+                                foreach($elmlist as $tag)
+                                {
+                                 $tag = trim($tag);
+                                 $SQL .= sprintf(" INNER JOIN (SELECT GREEN_TAGS.PROJECT_CODE FROM GREEN_TAGS WHERE TAG LIKE '%%%s%%') %s ON GREEN_PROJECTS.CODE = %s.PROJECT_CODE", $tag , $tag , $tag);
+                                }
+                                break;
+                             case "NAME":
+                                foreach($elmlist as $name)
+                                {
+                                    $name = trim($name);
+                                    $SQL .= sprintf(" INNER JOIN (SELECT GREEN_PROJECTS.CODE FROM GREEN_PROJECTS WHERE NAME LIKE '%%%s%%') %s ON GREEN_PROJECTS.CODE = %s.CODE",$name , $name , $name );
+                                }
+                                break; 
+                         }
+                        }
+                    }
+                }
+                else
+                {
+                    //normal entry -> searches for all the names and tags that matches
+                    $SQL = sprintf("SELECT CODE ,NAME , POSTER FROM GREEN_PROJECTS WHERE NAME LIKE '%%%s%%' UNION SELECT CODE , NAME , POSTER FROM GREEN_PROJECTS INNER JOIN (SELECT PROJECT_CODE FROM GREEN_TAGS WHERE TAG LIKE '%%%s%%') T ON GREEN_PROJECTS.CODE = T.PROJECT_CODE"  , $_GET["query"] , $_GET["query"]);
+                }
+                if($res = mysqli_query($db_conn , $SQL))
+                {
+                    $RESULT = [];
+                    while($arr = $res->fetch_assoc())
+                    {
+                        $arr["POSTER"] = GP_USER_RESOURCE_ALIAS . '/' . $arr["POSTER"];
+                        array_push($RESULT , $arr);
+                    }
+                    echo json_encode($RESULT);
+                }
+                else
+                {
+                    echo "[]";
+                }
+            }
       }
       mysqli_close($db_conn);
       }   

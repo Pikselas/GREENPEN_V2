@@ -35,6 +35,22 @@ document.body.onload = ()=>{
 document.getElementById("Profile").onclick = ()=>{
     window.location = `userprofile.html?greenuser=${UserCookie["active_user_name"]}`;
 }
+
+/*
+ SEARCH METHOD -> 
+    normal ->results all the matchings as (project name alike , tag alike)
+    filter modes -> query like -> TAGNAME:BMW,MERC  (unions all the tags)
+*/
+document.getElementById("ProjectSearcher").onchange = (ev)=>{
+    PerformAjaxRequest("GET" , {} , "../server/userarea.php?action=SEARCH&query=" + ev.target.value , "" , true , (res)=>{
+        res = JSON.parse(res);
+        let Holder = document.getElementById("PojectContainer");
+        Holder.innerHTML = "";
+        res.forEach((Obj)=>{
+            setTimeout(()=>{Holder.appendChild(CreateProjectPanel(Obj))} , 1);
+        });
+    });
+}
 document.getElementById("LogOut").onclick = LogOut;
 document.getElementById("NewProject").onclick = ()=>{
     let ProjectName = prompt("Enter Project Name");
