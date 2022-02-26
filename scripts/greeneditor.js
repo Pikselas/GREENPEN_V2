@@ -342,23 +342,30 @@ function AddNewVideoSection()
     }
    }
 }
-function RemoveImageSection(ID)
+function RemoveImage(ID)
 {
-    Object.keys(PROJECT_JSON["IMAGE_FRAMES"][ID]["IMAGE_LIST"]).forEach((ky)=>{
-    let ImagePath = PROJECT_JSON["IMAGES"][ky]["path"];
-    delete PROJECT_JSON["IMAGES"][ky];
-    if(TempFileS.hasOwnProperty(ky))
+    let ImagePath = PROJECT_JSON["IMAGES"][ID]["path"];
+    delete PROJECT_JSON["IMAGES"][ID];
+    if(TempFileS.hasOwnProperty(ID))
     {
-        delete TempFileS[ky];
+        delete TempFileS[ID];
     }
     else
     {
         Deleted["FILES"].push(ImagePath);
     }
-    if(Changes.hasOwnProperty(ky))
+    if(Changes.hasOwnProperty(ID))
     {
-        delete Changes[ky];
+        delete Changes[ID];
     }
+    let elm = document.getElementById(ID);
+    delete PROJECT_JSON["IMAGE_FRAMES"][elm.parentElement.parentElement.id]["IMAGE_LIST"][ID];
+    elm.parentElement.removeChild(elm);
+}
+function RemoveImageSection(ID)
+{
+    Object.keys(PROJECT_JSON["IMAGE_FRAMES"][ID]["IMAGE_LIST"]).forEach((ky)=>{
+    RemoveImage(ky);
    });
    if(NewAdd["FOLDERS"].hasOwnProperty(ID))
    {
@@ -385,6 +392,24 @@ function AddNewImageSection()
    NewAdd["FOLDERS"][ID] = "";
    ParentItem.appendChild(CreateImageSection(ID,null,null,Left,Top));
 }
+
+function CreateContextPanel(func = (pan)=>{})
+{
+    let Panel = document.createElement("div");
+    Panel.className = "ContextPanel";
+    document.body.onclick = (ev)=>{
+        if(ev.target != Panel && !Panel.contains(ev.target))
+        {
+            document.body.removeChild(Panel);
+            document.body.onclick = null;
+        }
+    }
+
+    func(Panel);
+
+    document.body.appendChild(Panel);
+}
+
 function Save()
 {
   let PathData = GetPathData();
@@ -415,4 +440,41 @@ function Save()
         }
       });
   }
+}
+
+// horizontal scrolling
+document.getElementById("TagDetails").addEventListener("wheel",(ev)=>{
+    document.getElementById("TagDetails").scrollBy({left: ev.deltaY > 0 ? 10 : -10});
+})
+// customized context menu
+
+document.body.oncontextmenu = (ev)=>
+{
+    ev.preventDefault();
+    document.body.click();
+    switch(ev.target.nodeName)
+    {
+        case "IMG":
+            if(ev.target.parentElement.className == "SubImagePanel")
+            {
+                CreateContextPanel((panel) =>{
+                    panel.style.top = String(ev.clientY) + "px";
+                    panel.style.left = String(ev.clientX) + "px";
+                    let InnerDiv1 = document.createElement("div");
+                    let InnerDiv2 = document.createElement("div");
+                    InnerDiv1.innerHTML = "ADD TAG";
+                    InnerDiv2.innerHTML = "delete";
+                    InnerDiv2.onclick = ()=>{
+                        RemoveImage(ev.target.id);
+                        document.body.click();
+                    }
+                    panel.appendChild(InnerDiv1);
+                    panel.appendChild(InnerDiv2);
+                });
+            }
+            break;
+        case "VIDEO":
+            console.log("vid");
+            break;
+    }
 }
