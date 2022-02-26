@@ -161,3 +161,93 @@
     height: 90%;
     cursor: pointer;
 }
+.TagHolder
+{
+    display: inline-block;
+    width: 20%;
+    height: 75%;
+    border-top: 3px solid rgba(4, 255, 109, 0.616);
+    border-bottom: 3px solid rgba(4, 255, 109, 0.616);
+    border-radius: 5px;
+    position: relative;
+    top: -5%;
+}
+#AddTagButton
+{
+    width: 10%;
+    height: 99%;
+    right: 0%;
+    position: absolute;
+    background-color: rgba(82, 10, 248, 0.897);
+    color: white;
+    font-weight: 700;
+    font-size:large;
+    border: none;
+    border-left: 3px solid rgba(4, 255, 109, 0.87);
+}
+#TagDetails
+{
+    width: 90%;
+    height: 99%;
+    display: inline-block;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    white-space: nowrap;
+    text-align: center;
+}
+#TagDetails button
+{
+    position: relative;
+    top: 0px;
+    height: 100%;
+    display: inline-block;
+    color: rgba(255, 255, 255, 0.808);
+    font-family: monospace;
+    font-weight: 600;
+    font-size: large;
+    background-color: rgba(17, 22, 20, 0.596);
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    border: 2px solid rgba(100, 99, 100, 0.87);
+    border-radius: 5px;
+    cursor: pointer;
+}
+#TagDetails button:hover
+{
+    color: rgba(255, 255, 255, 0.904);
+    background-color: rgba(12, 14, 13, 0.842);
+}
+.ContextPanel
+{
+    position: fixed;
+    width: 250px;
+    height: 200px;
+    border-radius: 10px;
+    border: 2px solid rgba(109, 12, 133, 0.76);
+    box-shadow: 0px 0px 5px rgba(14, 12, 12, 0.719);
+    background-color: rgba(28, 4, 37, 0.89);
+}
+.ContextPanel div
+{
+    cursor: pointer;
+    position: relative;
+    width: 200px;
+    color: rgba(197, 95, 255, 0.82);
+    font-family: monospace;
+    font-size: medium;
+    font-weight: 600;
+    padding : 5px;
+    margin: 5%;
+    border-bottom: 2px solid rgba(110, 10, 224, 0.705);
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: 0px 10px 20px #260c4cab;
+}
+.ContextPanel div:hover
+{
+    color: rgba(196, 95, 255, 0.932);
+    box-shadow: 0px 10px 20px #260c4cc4;
+    border-bottom-color:rgba(110, 10, 224, 0.863) ;
+}
