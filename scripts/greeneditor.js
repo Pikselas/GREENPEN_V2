@@ -3,6 +3,8 @@ var NewAdd = {"FOLDERS" : {}};
 var Deleted = {"FOLDERS" : [] , "FILES" : []};
 var Changes = {} ; // { ID1 : {"source" : "","dest":"" },ID2 : {"source" : "","dest":"" }}
 var TempFileS = {}; // {ID : {blob : "",dest : "real_path"}}
+var NewlyAddedTags = {};
+var RemovedTags = {};
 
 var ImgSubPanelIndx = 3;
 window.addEventListener("dragover",function(e){
@@ -421,6 +423,14 @@ function RemoveEmptyTags()
                     && 
            Object.keys(PROJECT_JSON["TAGS"][tagname]["VIDEOS"]).length == 0)
         {
+            if(NewlyAddedTags.hasOwnProperty(tagname))
+            {
+              delete NewlyAddedTags[tagname];  
+            }
+            else
+            {
+                RemovedTags[tagname] = "";
+            }
             delete PROJECT_JSON["TAGS"][tagname];
         }
     });
@@ -449,6 +459,8 @@ function Save()
             Deleted = {"FOLDERS" : [] , "FILES" : []};
             Changes = {} ;
             TempFileS = {};
+            NewlyAddedTags = {};
+            RemovedTags = {};
             alert("saved");
         }
         else
@@ -477,11 +489,11 @@ document.body.oncontextmenu = (ev)=>
                 CreateContextPanel((panel) =>{
                     panel.style.top = String(ev.clientY) + "px";
                     panel.style.left = String(ev.clientX) + "px";
-                    let InnerDiv1 = document.createElement("div");
-                    let InnerDiv2 = document.createElement("div");
-                    InnerDiv1.innerHTML = "ADD TAG";
-                    InnerDiv2.innerHTML = "delete";
-                    InnerDiv1.onclick = ()=>{
+                    let AddTagBut1 = document.createElement("div");
+                    let DelBut = document.createElement("div");
+                    AddTagBut1.innerHTML = "ADD TAG";
+                    DelBut.innerHTML = "delete";
+                    AddTagBut1.onclick = ()=>{
                         document.body.click();
                         if((Etag = prompt("ENTER TAG NAME:")) != null)
                         {
@@ -495,6 +507,10 @@ document.body.oncontextmenu = (ev)=>
                                 if(!PROJECT_JSON["TAGS"].hasOwnProperty(Etag))
                                 {
                                     PROJECT_JSON["TAGS"][Etag] = {"IMAGES" : {} , "VIDEOS" : {}};
+                                    NewlyAddedTags[Etag] = "";
+                                    let tagbut = document.createElement("button");
+                                    tagbut.innerHTML = Etag;
+                                    document.getElementById("TagDetails").appendChild(tagbut);
                                 }
                                 if(!PROJECT_JSON["TAGS"][Etag].hasOwnProperty(ev.target.id))
                                 {
@@ -505,12 +521,25 @@ document.body.oncontextmenu = (ev)=>
                             }
                         }
                     };
-                    InnerDiv2.onclick = ()=>{
+                    DelBut.onclick = ()=>{
                         RemoveImage(ev.target.id);
                         document.body.click();
                     };
-                    panel.appendChild(InnerDiv1);
-                    panel.appendChild(InnerDiv2);
+                    panel.appendChild(AddTagBut1);
+
+                    PROJECT_JSON["IMAGES"][ev.target.id]["tags"].forEach((tagname)=>{
+                        let DelTagBut = document.createElement("div");
+                        DelTagBut.innerHTML = "remove " + tagname;
+                        DelTagBut.onclick = ()=>{
+                            document.body.click();
+                            let tagIndx = PROJECT_JSON["IMAGES"][ev.target.id]["tags"].indexOf(tagname);
+                            PROJECT_JSON["IMAGES"][ev.target.id]["tags"].splice(tagIndx , 1);
+                            delete PROJECT_JSON["TAGS"][tagname]["IMAGES"][ev.target.id];
+                        }
+                        panel.appendChild(DelTagBut);
+                    });
+
+                    panel.appendChild(DelBut);
                 });
             }
             break;
