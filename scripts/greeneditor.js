@@ -120,6 +120,7 @@ function GetAddPanel()
                     let Obj = {};
                     Obj["path"] = ev.target.parentElement.id + '/' + FileList.files[i].name;
                     Obj["path_type"] = "LOCAL";
+                    Obj["tags"] = [];
                     PROJECT_JSON["IMAGES"][Img.id] = Obj;
                     PROJECT_JSON["IMAGE_FRAMES"][ev.target.parentElement.id]["IMAGE_LIST"][Img.id] = "";
                     Obj = {"blob" : FileList.files[i] , "dest" : Obj["path"]};
@@ -214,8 +215,8 @@ function CreateImageSection(ID,width = null,height = null , Left , Top)
     PanelCloseButton.className = "ImageFrameCloseButton";
     //when the X button will be clicked the frame will be removed including all the images
     PanelCloseButton.onclick = (ev)=>{
-        document.getElementById("ProjectArea").removeChild(ev.target.parentElement);
         RemoveImageSection(ID);
+        document.getElementById("ProjectArea").removeChild(ev.target.parentElement);
     }
     PanelAddButton.className = "ImageFrameAddButton";
     PanelAddButton.innerHTML = "+";
@@ -345,6 +346,9 @@ function AddNewVideoSection()
 function RemoveImage(ID)
 {
     let ImagePath = PROJECT_JSON["IMAGES"][ID]["path"];
+    PROJECT_JSON["IMAGES"][ID]["tags"].forEach((tagname)=>{
+        delete PROJECT_JSON["TAGS"][tagname]["IMAGES"][ID];
+    });
     delete PROJECT_JSON["IMAGES"][ID];
     if(TempFileS.hasOwnProperty(ID))
     {
@@ -410,11 +414,24 @@ function CreateContextPanel(func = (pan)=>{})
     document.body.appendChild(Panel);
 }
 
+function RemoveEmptyTags()
+{
+    Object.keys(PROJECT_JSON["TAGS"]).forEach((tagname)=>{
+        if(Object.keys(PROJECT_JSON["TAGS"][tagname]["IMAGES"]).length == 0 
+                    && 
+           Object.keys(PROJECT_JSON["TAGS"][tagname]["VIDEOS"]).length == 0)
+        {
+            delete PROJECT_JSON["TAGS"][tagname];
+        }
+    });
+}
+
 function Save()
 {
   let PathData = GetPathData();
   if(PathData.hasOwnProperty("code"))
   {
+      RemoveEmptyTags();
       let TmpFLDests = [];
       let FrmDT = CreateFormData({"JSON" : JSON.stringify(PROJECT_JSON),"CHANGES" : JSON.stringify(Changes) ,
                                  "NEW_ADD" : JSON.stringify(NewAdd) ,"DELETED" : JSON.stringify(Deleted)});
@@ -464,10 +481,34 @@ document.body.oncontextmenu = (ev)=>
                     let InnerDiv2 = document.createElement("div");
                     InnerDiv1.innerHTML = "ADD TAG";
                     InnerDiv2.innerHTML = "delete";
+                    InnerDiv1.onclick = ()=>{
+                        document.body.click();
+                        if((Etag = prompt("ENTER TAG NAME:")) != null)
+                        {
+                            if(Etag == "")
+                            {
+                                alert("Empty string is not allowed");
+                            }
+                            else
+                            {
+                                Etag = Etag.toUpperCase();
+                                if(!PROJECT_JSON["TAGS"].hasOwnProperty(Etag))
+                                {
+                                    PROJECT_JSON["TAGS"][Etag] = {"IMAGES" : {} , "VIDEOS" : {}};
+                                }
+                                if(!PROJECT_JSON["TAGS"][Etag].hasOwnProperty(ev.target.id))
+                                {
+                                    PROJECT_JSON["IMAGES"][ev.target.id]["tags"].push(Etag);
+                                }
+                                PROJECT_JSON["TAGS"][Etag]["IMAGES"][ev.target.id] = "";
+                                
+                            }
+                        }
+                    };
                     InnerDiv2.onclick = ()=>{
                         RemoveImage(ev.target.id);
                         document.body.click();
-                    }
+                    };
                     panel.appendChild(InnerDiv1);
                     panel.appendChild(InnerDiv2);
                 });

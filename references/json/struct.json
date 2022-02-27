@@ -20,6 +20,19 @@
    "SYNC_V" : {"IMAGE_ID1" : {"VID_ID2" : "time-start"},
               "IMAGE_ID2" : {"VID_ID2" : "time-start"}
             },
+
+    "TAGS"  : {  
+
+            "TAG-1" : {
+                          "IMAGES" : {"id1" : "" , "id2" : "" , "id3" : ""},
+                          "VIDEOS" : {
+                                      "id1":["start" , "end"],
+                                      "id2":["start" , "end"]
+                                    }
+                      }
+
+     }, 
+
    "SCENES" : {"SCENE_NAME1" : [{"VIDEO_ID" : {"TO":"00","FROM":"00"}},
                                 {"VIDEO_ID" : {"TO":"00","FROM":"00"}}
                                ] , 
