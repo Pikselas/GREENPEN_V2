@@ -13,6 +13,14 @@ if(isset($_GET["code"]))
                 $ResponseJson = $res->fetch_assoc(); 
                 $ResponseJson["POSTER"] = GP_USER_RESOURCE_ALIAS.'/'. $ResponseJson["POSTER"];
                 $ResponseJson["success"] = true;
+                $ResponseJson["TAGS"] = [];
+                if($res = mysqli_query( $db_conn, sprintf("SELECT TAG FROM GREEN_TAGS WHERE PROJECT_CODE = %s" , $_GET["code"])))
+                {
+                    while($tg = $res->fetch_assoc())
+                    {
+                        array_push($ResponseJson["TAGS"] , $tg["TAG"]);
+                    }
+                }
             }
         }
      mysqli_close($db_conn);

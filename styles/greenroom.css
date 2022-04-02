@@ -1,16 +1,17 @@
 body
 {
-    background-color: #261e53fd;
+    background-color: #070927;
 }
 #ProjectLgT
 {
     width: 45%;
     height: 97%;
     position: absolute;
-    box-shadow: 10px 0px 10px rgb(26, 26, 56);
-    background-color: rgba(13, 74, 116, 0.171);
+    box-shadow: 0px 0px 10px rgba(2, 2, 2, 0.829);
+    background-color: #1f154d54;
     text-align: center;
     align-items: center;
+    border-radius: 10px;
 }
 #ProjectLgT .P_Lg
 {
@@ -19,8 +20,9 @@ body
     height: 60%;
     left: -0.5%;
     top: 2%;
-    border-radius: 40px;
-    box-shadow: 0px 0px 50px rgb(18, 105, 175);
+    border: 5px solid #0dcb72b4;
+    border-radius: 10px;
+    box-shadow: 10px 10px 5px #00000042;
 }
 #ProjectLgT .P_Ti
 {
@@ -30,19 +32,96 @@ body
     font-weight: 900;
     font-style:oblique;
     font-size: xx-large;
-    color: rgb(116, 255, 146);
+    color: rgb(20, 160, 118);
     text-shadow: 5px 4px 5px #000;
+}
+#ProjectDtls
+{
+    position: absolute;
+    width: 500px;
+    height: 300px;
+    background-color: rgba(93, 45, 133, 0.219);
+    box-shadow: 0px 0px 10px black;
+    border-radius: 10px;
+    top: calc(50% - 250px);
+    right: calc(50% - 600px);
+}
+#ProjectDtls table
+{
+    font-family: monospace;
+    width: 100%;
+    padding: 10px;
+    font-size: large;
+    color: rgba(255, 255, 255, 0.747);
+}
+#ProjectDtls table td:nth-child(1)
+{
+    color: rgb(255, 255, 255);
+    font-weight: 700;
+}
+#ProjectDtls p
+{
+    position: relative;
+    width: 475px;
+    height: 170px;
+    border: 2px double rgb(4, 216, 117);
+    left: 10px;
+    border-radius: 10px;
+    text-align: center;
+
+}
+#ProjectDtls p b
+{
+    position: absolute;
+    color: white;
+    padding: 5px;
+    top: -15px;
+    left: 15px;
+    background-color: rgb(90, 44, 143);
+    border-radius: 5px;
+}
+#ProjectDtls p span
+{
+    transition: all .1s;
+    font-size: large;
+    font-weight: 800;
+    font-family: monospace;
+    background-color: rgba(6, 202, 111, 0.87);
+    color: rgba(255, 255, 255, 0.808);
+    padding:10px;
+    border-radius: 5px;
+    margin: 1px;
+    margin-bottom: 5px;
+    display: inline-block;
+    box-shadow: 0px 0px 5px rgba(17, 17, 17, 0.747);
+    cursor: pointer;
+}
+#ProjectDtls p span:hover 
+{
+    background-color: rgba(6, 202, 111, 0.753);
+    color: rgba(255, 255, 255, 0.911);
 }
 #ProjectAction
 {
     position: absolute;
-    top: 70%;
-    left: 46%;
-    width: 54%;
-    align-items: center;
-
+    width: 500px;
+    top: calc(50% + 150px);
+    right: calc(50% - 600px);
+    text-align: center;
 }
 #ProjectAction button
 {
-    width: 10%;
+    transition: all .5s;
+    cursor: pointer;
+    width: 65px;
+    height: 35px;
+    color: white;
+    font-size: smaller;
+    background-color: rgb(8, 161, 72);
+    border: 2px solid green;
+    border-radius: 5px;
+}
+#ProjectAction button:hover
+{
+    background-color: rgba(8, 161, 72, 0.658);   
 }

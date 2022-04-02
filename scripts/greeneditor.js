@@ -4,6 +4,8 @@ var NewAdd = {"FOLDERS" : {}};
 var Deleted = {"FOLDERS" : [] , "FILES" : []};
 var Changes = {} ; // { ID1 : {"source" : "","dest":"" },ID2 : {"source" : "","dest":"" }}
 var TempFileS = {}; // {ID : {blob : "",dest : "real_path"}}
+var NewlyAddedTags = {};
+var RemovedTags = {};
 
 var ImgSubPanelIndx = 3;
 window.addEventListener("dragover",function(e){
@@ -145,6 +147,7 @@ function GetAddPanel()
                     let Obj = {};
                     Obj["path"] = ev.target.parentElement.id + '/' + FileList.files[i].name;
                     Obj["path_type"] = "LOCAL";
+                    Obj["tags"] = [];
                     PROJECT_JSON["IMAGES"][Img.id] = Obj;
                     PROJECT_JSON["IMAGE_FRAMES"][ev.target.parentElement.id]["IMAGE_LIST"][Img.id] = "";
                     Obj = {"blob" : FileList.files[i] , "dest" : Obj["path"]};
@@ -239,8 +242,8 @@ function CreateImageSection(ID,width = null,height = null , Left , Top)
     PanelCloseButton.className = "ImageFrameCloseButton";
     //when the X button will be clicked the frame will be removed including all the images
     PanelCloseButton.onclick = (ev)=>{
-        document.getElementById("ProjectArea").removeChild(ev.target.parentElement);
         RemoveImageSection(ID);
+        document.getElementById("ProjectArea").removeChild(ev.target.parentElement);
     }
     PanelAddButton.className = "ImageFrameAddButton";
     PanelAddButton.innerHTML = "+";
@@ -367,23 +370,33 @@ function AddNewVideoSection()
     }
    }
 }
-function RemoveImageSection(ID)
+function RemoveImage(ID)
 {
-    Object.keys(PROJECT_JSON["IMAGE_FRAMES"][ID]["IMAGE_LIST"]).forEach((ky)=>{
-    let ImagePath = PROJECT_JSON["IMAGES"][ky]["path"];
-    delete PROJECT_JSON["IMAGES"][ky];
-    if(TempFileS.hasOwnProperty(ky))
+    let ImagePath = PROJECT_JSON["IMAGES"][ID]["path"];
+    PROJECT_JSON["IMAGES"][ID]["tags"].forEach((tagname)=>{
+        delete PROJECT_JSON["TAGS"][tagname]["IMAGES"][ID];
+    });
+    delete PROJECT_JSON["IMAGES"][ID];
+    if(TempFileS.hasOwnProperty(ID))
     {
-        delete TempFileS[ky];
+        delete TempFileS[ID];
     }
     else
     {
         Deleted["FILES"].push(ImagePath);
     }
-    if(Changes.hasOwnProperty(ky))
+    if(Changes.hasOwnProperty(ID))
     {
-        delete Changes[ky];
+        delete Changes[ID];
     }
+    let elm = document.getElementById(ID);
+    delete PROJECT_JSON["IMAGE_FRAMES"][elm.parentElement.parentElement.id]["IMAGE_LIST"][ID];
+    elm.parentElement.removeChild(elm);
+}
+function RemoveImageSection(ID)
+{
+    Object.keys(PROJECT_JSON["IMAGE_FRAMES"][ID]["IMAGE_LIST"]).forEach((ky)=>{
+    RemoveImage(ky);
    });
    if(NewAdd["FOLDERS"].hasOwnProperty(ID))
    {
@@ -410,14 +423,71 @@ function AddNewImageSection()
    NewAdd["FOLDERS"][ID] = "";
    ParentItem.appendChild(CreateImageSection(ID,null,null,Left,Top));
 }
+
+function CreateContextPanel(func = (pan)=>{})
+{
+    let Panel = document.createElement("div");
+    Panel.className = "ContextPanel";
+    document.body.onclick = (ev)=>{
+        if(ev.target != Panel && !Panel.contains(ev.target))
+        {
+            document.body.removeChild(Panel);
+            document.body.onclick = null;
+        }
+    }
+
+    func(Panel);
+
+    document.body.appendChild(Panel);
+}
+
+function CreateTagPanel()
+{
+    let panel = document.createElement("div");
+    let panleImgSection = document.createElement("div");
+    let panelVideoSection = document.createElement("div");
+    
+    panel.className = "TagSection";
+    panleImgSection.className = "TaggedImageSection";
+    panelVideoSection.className = "TaggedVideoSection";
+
+    panel.appendChild(panleImgSection);
+    panel.appendChild(panelVideoSection);
+
+    return panel;
+    
+}
+
+function RemoveEmptyTags()
+{
+    Object.keys(PROJECT_JSON["TAGS"]).forEach((tagname)=>{
+        if(Object.keys(PROJECT_JSON["TAGS"][tagname]["IMAGES"]).length == 0 
+                    && 
+           Object.keys(PROJECT_JSON["TAGS"][tagname]["VIDEOS"]).length == 0)
+        {
+            if(NewlyAddedTags.hasOwnProperty(tagname))
+            {
+              delete NewlyAddedTags[tagname];  
+            }
+            else
+            {
+                RemovedTags[tagname] = "";
+            }
+            delete PROJECT_JSON["TAGS"][tagname];
+        }
+    });
+}
+
 function Save()
 {
   let PathData = GetPathData();
   if(PathData.hasOwnProperty("code"))
   {
+      RemoveEmptyTags();
       let TmpFLDests = [];
       let FrmDT = CreateFormData({"JSON" : JSON.stringify(PROJECT_JSON),"CHANGES" : JSON.stringify(Changes) ,
-                                 "NEW_ADD" : JSON.stringify(NewAdd) ,"DELETED" : JSON.stringify(Deleted)});
+                                 "NEW_ADD" : JSON.stringify(NewAdd) ,"DELETED" : JSON.stringify(Deleted) , 
+                                 "ADDED_TAGS" : JSON.stringify(NewlyAddedTags) ,"REMOVED_TAGS" : JSON.stringify(RemovedTags)});
       Object.keys(TempFileS).forEach((ky)=>{
         TmpFLDests.push(TempFileS[ky]["dest"]);
         FrmDT.append("TempFiles[]" , TempFileS[ky]["blob"]);
@@ -432,6 +502,8 @@ function Save()
             Deleted = {"FOLDERS" : [] , "FILES" : []};
             Changes = {} ;
             TempFileS = {};
+            NewlyAddedTags = {};
+            RemovedTags = {};
             alert("saved");
         }
         else
@@ -440,4 +512,104 @@ function Save()
         }
       });
   }
+}
+
+// horizontal scrolling
+document.getElementById("TagDetails").addEventListener("wheel",(ev)=>{
+    document.getElementById("TagDetails").scrollBy({left: ev.deltaY > 0 ? 10 : -10});
+})
+// customized context menu
+
+document.body.oncontextmenu = (ev)=>
+{
+    ev.preventDefault();
+    document.body.click();
+    switch(ev.target.nodeName)
+    {
+        case "IMG":
+            if(ev.target.parentElement.className == "SubImagePanel")
+            {
+                CreateContextPanel((panel) =>{
+                    panel.style.top = String(ev.clientY) + "px";
+                    panel.style.left = String(ev.clientX) + "px";
+                    let AddTagBut1 = document.createElement("div");
+                    let DelBut = document.createElement("div");
+                    AddTagBut1.innerHTML = "ADD TAG";
+                    DelBut.innerHTML = "delete";
+                    AddTagBut1.onclick = ()=>{
+                        document.body.click();
+                        if((Etag = prompt("ENTER TAG NAME:")) != null)
+                        {
+                            if(Etag == "")
+                            {
+                                alert("Empty string is not allowed");
+                            }
+                            else
+                            {
+                                Etag = Etag.toUpperCase();
+                                if(!PROJECT_JSON["TAGS"].hasOwnProperty(Etag))
+                                {
+                                    PROJECT_JSON["TAGS"][Etag] = {"IMAGES" : {} , "VIDEOS" : {}};
+                                    NewlyAddedTags[Etag] = "";
+                                    let tagbut = document.createElement("button");
+                                    tagbut.innerHTML = Etag;
+                                    tagbut.onclick = (ev)=>{
+                                        document.body.click();
+                                        let panel = CreateTagPanel();
+                                        panel.style.left = ev.clientX - 50 + "px";
+                                        panel.style.top = ev.clientY - 400 + "px";
+                                        Object.keys(PROJECT_JSON["TAGS"][ev.target.innerHTML]["IMAGES"]).forEach((k)=>{
+                                            let Idbut = document.createElement("button");
+                                            Idbut.innerHTML = k;
+                                            Idbut.onclick = ()=>{
+                                                document.getElementById(k).scrollIntoView({behavior : "smooth"});
+                                            };
+                                            panel.children[0].appendChild(Idbut);
+                                        });
+                                        document.body.appendChild(panel);
+                                        document.body.onclick = (ev)=>{
+                                        if(ev.target != panel && !panel.contains(ev.target) && ev.target != tagbut)
+                                            {
+                                                panel.parentElement.removeChild(panel);
+                                                document.body.onclick = null;
+                                            }
+                                        };
+                                    }
+                                    document.getElementById("TagDetails").appendChild(tagbut);
+                                }
+                                if(!PROJECT_JSON["TAGS"][Etag].hasOwnProperty(ev.target.id))
+                                {
+                                    PROJECT_JSON["IMAGES"][ev.target.id]["tags"].push(Etag);
+                                }
+                                PROJECT_JSON["TAGS"][Etag]["IMAGES"][ev.target.id] = "";
+                                
+                            }
+                        }
+                    };
+                    DelBut.onclick = ()=>{
+                        RemoveImage(ev.target.id);
+                        document.body.click();
+                    };
+                    panel.appendChild(AddTagBut1);
+
+                    PROJECT_JSON["IMAGES"][ev.target.id]["tags"].forEach((tagname)=>{
+                        let DelTagBut = document.createElement("div");
+                        DelTagBut.innerHTML = "remove " + tagname;
+                        DelTagBut.onclick = ()=>{
+                            document.body.click();
+                            let tagIndx = PROJECT_JSON["IMAGES"][ev.target.id]["tags"].indexOf(tagname);
+                            PROJECT_JSON["IMAGES"][ev.target.id]["tags"].splice(tagIndx , 1);
+                            delete PROJECT_JSON["TAGS"][tagname]["IMAGES"][ev.target.id];
+                        }
+                        panel.appendChild(DelTagBut);
+                    });
+
+                    panel.appendChild(DelBut);
+                });
+            }
+            break;
+        case "VIDEO":
+            console.log("vid");
+            break;
+    }
 }

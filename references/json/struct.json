@@ -2,7 +2,7 @@
    "NAME"    : "" , 
    "POSTER"  : "" ,
    "VIDEOS"  : {  "VID_ID1" : {"PATH" : "" , "PATH_TYPE" : "URL/LOCAL","TOP": "100px" , "LEFT" : "150px" , "HEIGHT" : "400px" , "WIDTH" : "300px"}},
-   "IMAGES"  : {"img_ID" : {"path" : "path" , "path_type" : "URL/LOCAL"}},
+   "IMAGES"  : {"img_ID" : {"path" : "path" , "path_type" : "URL/LOCAL" , "tags" : []}},
    "IMAGE_FRAMES"  : {
                 "FRAME_ID1" : {  
                                 "TOP" : "100px",
@@ -20,6 +20,19 @@
    "SYNC_V" : {"IMAGE_ID1" : {"VID_ID2" : "time-start"},
               "IMAGE_ID2" : {"VID_ID2" : "time-start"}
             },
+
+    "TAGS"  : {  
+
+            "TAG-1" : {
+                          "IMAGES" : {"id1" : "" , "id2" : "" , "id3" : ""},
+                          "VIDEOS" : {
+                                      "id1":["start" , "end"],
+                                      "id2":["start" , "end"]
+                                    }
+                      }
+
+     }, 
+
    "SCENES" : {"SCENE_NAME1" : [{"VIDEO_ID" : {"TO":"00","FROM":"00"}},
                                 {"VIDEO_ID" : {"TO":"00","FROM":"00"}}
                                ] , 

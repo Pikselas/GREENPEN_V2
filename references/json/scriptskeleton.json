@@ -1,10 +1,8 @@
 {
-    "NAME"    : "" , 
-    "POSTER"  : "" ,
-    "VIDEOS"  : {} ,
-    "IMAGES"  : {} ,
-    "IMAGE_FRAMES" : {},
-    "SYNC_IMV": {} ,
-    "SYNC_V"  : {} ,
-    "SCENES"  : {}
+    "NAME"          : "" , 
+    "POSTER"        : "" ,
+    "VIDEOS"        : {} ,
+    "IMAGES"        : {} ,
+    "IMAGE_FRAMES"  : {},
+    "TAGS"          : {}
  }
