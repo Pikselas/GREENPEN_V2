@@ -50,20 +50,22 @@ include "../references/php/defines.php";
                }
                if(isset($_FILES["TempFiles"]))
                {
-               $TempFileDest = json_decode($_POST["TempFilePaths"],true);
-               $FileSize = count($_FILES["TempFiles"]["tmp_name"]);
-               for($i = 0 ; $i < $FileSize ; $i++)
-               {
-                 move_uploaded_file($_FILES["TempFiles"]["tmp_name"][$i],$ProjPath .'/'. $TempFileDest[$i]);
+                $TempFileDest = json_decode($_POST["TempFilePaths"],true);
+                $FileSize = count($_FILES["TempFiles"]["tmp_name"]);
+                for($i = 0 ; $i < $FileSize ; $i++)
+                {
+                  move_uploaded_file($_FILES["TempFiles"]["tmp_name"][$i],$ProjPath .'/'. $TempFileDest[$i]);
+                }
                }
-               }
-               $Deleted = json_decode($_POST["DELETED"],true);
-               foreach($Deleted["FILES"] as $fl)
+               if(isset($_POST["DELETED"]))
                {
-                 if(is_file($ProjPath . '/' . $fl))
-                 {
-                  unlink($ProjPath . '/' . $fl);
-                 }
+                $Deleted = json_decode($_POST["DELETED"],true);
+                foreach($Deleted["FILES"] as $fl)
+                {
+                  if(is_file($ProjPath . '/' . $fl))
+                  {
+                    unlink($ProjPath . '/' . $fl);
+                  }
                }
                foreach($Deleted["FOLDERS"] as $dir)
                {
@@ -72,6 +74,21 @@ include "../references/php/defines.php";
                    rmdir($ProjPath . '/' .$dir);
                  }
                }
+              }
+              if(isset($_POST["ADDED_TAGS"]))
+              {
+                foreach(json_decode($_POST["ADDED_TAGS"] , true) as $tag => $val)
+                {
+                  mysqli_query($db_conn , sprintf("INSERT INTO GREEN_TAGS values('%s' , %s)" , $tag , $_GET["code"]));
+                }
+              }
+              if(isset($_POST["REMOVED_TAGS"]))
+              {
+                foreach(json_decode($_POST["REMOVED_TAGS"] , true) as $tag => $val)
+                {
+                  mysqli_query($db_conn , sprintf("DELETE FROM GREEN_TAGS WHERE PROJECT_CODE = %s AND TAG = '%s'" , $_GET["code"] , $tag));
+                }
+              }
               file_put_contents($ProjScriptPath,json_encode(json_decode($_POST["JSON"]),JSON_PRETTY_PRINT));
             }
           }

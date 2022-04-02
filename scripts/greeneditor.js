@@ -486,7 +486,8 @@ function Save()
       RemoveEmptyTags();
       let TmpFLDests = [];
       let FrmDT = CreateFormData({"JSON" : JSON.stringify(PROJECT_JSON),"CHANGES" : JSON.stringify(Changes) ,
-                                 "NEW_ADD" : JSON.stringify(NewAdd) ,"DELETED" : JSON.stringify(Deleted)});
+                                 "NEW_ADD" : JSON.stringify(NewAdd) ,"DELETED" : JSON.stringify(Deleted) , 
+                                 "ADDED_TAGS" : JSON.stringify(NewlyAddedTags) ,"REMOVED_TAGS" : JSON.stringify(RemovedTags)});
       Object.keys(TempFileS).forEach((ky)=>{
         TmpFLDests.push(TempFileS[ky]["dest"]);
         FrmDT.append("TempFiles[]" , TempFileS[ky]["blob"]);
