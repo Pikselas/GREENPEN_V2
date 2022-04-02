@@ -441,6 +441,23 @@ function CreateContextPanel(func = (pan)=>{})
     document.body.appendChild(Panel);
 }
 
+function CreateTagPanel()
+{
+    let panel = document.createElement("div");
+    let panleImgSection = document.createElement("div");
+    let panelVideoSection = document.createElement("div");
+    
+    panel.className = "TagSection";
+    panleImgSection.className = "TaggedImageSection";
+    panelVideoSection.className = "TaggedVideoSection";
+
+    panel.appendChild(panleImgSection);
+    panel.appendChild(panelVideoSection);
+
+    return panel;
+    
+}
+
 function RemoveEmptyTags()
 {
     Object.keys(PROJECT_JSON["TAGS"]).forEach((tagname)=>{
@@ -535,6 +552,28 @@ document.body.oncontextmenu = (ev)=>
                                     NewlyAddedTags[Etag] = "";
                                     let tagbut = document.createElement("button");
                                     tagbut.innerHTML = Etag;
+                                    tagbut.onclick = (ev)=>{
+                                        document.body.click();
+                                        let panel = CreateTagPanel();
+                                        panel.style.left = ev.clientX - 50 + "px";
+                                        panel.style.top = ev.clientY - 400 + "px";
+                                        Object.keys(PROJECT_JSON["TAGS"][ev.target.innerHTML]["IMAGES"]).forEach((k)=>{
+                                            let Idbut = document.createElement("button");
+                                            Idbut.innerHTML = k;
+                                            Idbut.onclick = ()=>{
+                                                document.getElementById(k).scrollIntoView({behavior : "smooth"});
+                                            };
+                                            panel.children[0].appendChild(Idbut);
+                                        });
+                                        document.body.appendChild(panel);
+                                        document.body.onclick = (ev)=>{
+                                        if(ev.target != panel && !panel.contains(ev.target) && ev.target != tagbut)
+                                            {
+                                                panel.parentElement.removeChild(panel);
+                                                document.body.onclick = null;
+                                            }
+                                        };
+                                    }
                                     document.getElementById("TagDetails").appendChild(tagbut);
                                 }
                                 if(!PROJECT_JSON["TAGS"][Etag].hasOwnProperty(ev.target.id))
